@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Reservasjon</h1>
+<form>
+  <label>Navn <input type="text" name="name" /></label>
+  <label>E-post <input type="email" name="email" /></label>
+  <label>Telefon <input type="tel" name="phone" /></label>
+  <label>Dato <input type="date" name="date" /></label>
+  <label>Tid <input type="time" name="time" /></label>
+  <label>Gjester <input type="number" min="1" name="guests" /></label>
+  <button type="submit">Send</button>
+</form>
+{% endblock %}
