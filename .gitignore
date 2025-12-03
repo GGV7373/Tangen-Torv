@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+.build/
+.dist/
+.venv/
+venv/
+ENV/
+env/
+
+# Django
+*.log
+local_settings.py
+media/
+staticfiles/
+
+# Migrations cache
+**/migrations/**
+!**/migrations/__init__.py
+
+# SQLite database
+*.sqlite3
+
+# VS Code
+.vscode/
+
+# Node/Frontend
+node_modules/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Coverage / test
+.coverage
+htmlcov/
+
+# Python cache & tools
+pip-log.txt
+pip-delete-this-directory.txt
+.pyre/
+.pytype/
+pytest_cache/
+.mypy_cache/
+
+# Environment variables
+*.env
+.env.*
