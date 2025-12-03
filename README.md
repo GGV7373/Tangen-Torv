@@ -30,7 +30,7 @@ HTML + CSS + JS
 # Backend
 
 Dijanog for backaend
-PostgressSQl for databasen
+PostgressSQl for databasen [her](Database.md)
 
  - [x] Lage Django prosjekt
  - [ ] Lage Django app for reservasjoner
