@@ -4,9 +4,12 @@ Dette er netsiden + backedn for nettsiden til Tangen Torv resturang
 # Frontend
 HTML + CSS + JS
 
-[] Lage templets for nettsiden
-[] Lage statiske filer (CSS, JS, bilder)
-[] Lage sider (Hjem, Meny, Reservasjon)
+ - [ ] Lage templets for nettsiden
+ - [ ] Lage statiske filer (CSS, JS, bilder)
+ - [ ] Lage sider (Hjem, Meny, Reservasjon)
+ - [ ] Lage templets for nettsiden
+ - [ ] Lage statiske filer (CSS, JS, bilder)
+ - [ ] Lage sider (Hjem, Meny, Reservasjon)
 
 
 # Backend
@@ -14,7 +17,15 @@ HTML + CSS + JS
 Dijanog for backaned
 PostgressSQl for databasen
 
-[x] Lage Django prosjekt
+ - [x] Lage Django prosjekt
+ - [ ] Lage Django app for reservasjoner
+ - [ ] Lage modeller for reservasjoner
+ - [ ] Lage views for håndtering av reservasjoner
+ - [ ] Lage URL-ruter for appen
+ - [ ] Koble frontend med backend
+
+
+[x] Lage Django prosjekt 
 [] Lage Django app for reservasjoner
 [] Lage modeller for reservasjoner
 [] Lage views for håndtering av reservasjoner
@@ -22,7 +33,7 @@ PostgressSQl for databasen
 [] Koble frontend med backend
 
 ## Mappestruktur
-
+```plaintext
 tangen-torv/
 ├── docker-yml
 ├── manage.py
