@@ -8,3 +8,6 @@ def home(request: HttpRequest) -> HttpResponse:
 
 def reserve(request: HttpRequest) -> HttpResponse:
     return render(request, 'reserve.html')
+
+def menu(request: HttpRequest) -> HttpResponse:
+    return render(request, 'menu.html')

@@ -1,5 +1,89 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Meny</h1>
-<p>Kommer snart.</p>
+<div class="menu">
+    <h1>Meny</h1>
+    <p>Vår meny er under utarbeidelse, men her får du en smakebit på hva som kommer.<br>
+    Bilder og flere retter legges til snart!</p>
+
+    <section class="menu-section">
+        <h2>Forretter</h2>
+        <div class="menu-item">
+            <div class="menu-img-placeholder">Bilde<br>kommer</div>
+            <div>
+                <strong>Carpaccio av okse</strong><br>
+                Tynne skiver av okse, ruccola, parmesan og olivenolje.<br>
+                <span class="menu-price">139,-</span>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-img-placeholder"></div>
+            <div>
+                <strong>Husets suppe</strong><br>
+                Serveres med ferskt brød.<br>
+                <span class="menu-price">99,-</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="menu-section">
+        <h2>Hovedretter</h2>
+        <div class="menu-item">
+            <div class="menu-img-placeholder"></div>
+            <div>
+                <strong>Grillet entrecôte</strong><br>
+                Med ovnsbakte poteter, grønnsaker og rødvinssaus.<br>
+                <span class="menu-price">269,-</span>
+            </div>
+        </div>
+        <div class="menu-item">
+            <div class="menu-img-placeholder"></div>
+            <div>
+                <strong>Vegetarisk pasta</strong><br>
+                Sesongens grønnsaker, kremet saus og parmesan.<br>
+                <span class="menu-price">189,-</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="menu-section">
+        <h2>Desserter</h2>
+        <div class="menu-item">
+            <div class="menu-img-placeholder"></div>
+            <div>
+                <strong>Pannacotta</strong><br>
+                Med bærsaus og friske bær.<br>
+                <span class="menu-price">89,-</span>
+            </div>
+        </div>
+    </section>
+</div>
+<style>
+.menu-section { margin-bottom: 2.5rem; }
+.menu-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.2rem;
+    margin-bottom: 1.2rem;
+}
+.menu-img-placeholder {
+    width: 90px; height: 90px;
+    background: #f3e9e3;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: #bba89c;
+    font-size: 0.95rem;
+    font-style: italic;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.menu-price {
+    color: var(--accent-2);
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
+@media (max-width: 600px) {
+    .menu-item { flex-direction: column; gap: 0.5rem; }
+    .menu-img-placeholder { width: 100%; height: 60px; }
+}
+</style>
 {% endblock %}
