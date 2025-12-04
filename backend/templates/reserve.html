@@ -1,13 +1,30 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Reservasjon</h1>
-<form>
-  <label>Navn <input type="text" name="name" /></label>
-  <label>E-post <input type="email" name="email" /></label>
-  <label>Telefon <input type="tel" name="phone" /></label>
-  <label>Dato <input type="date" name="date" /></label>
-  <label>Tid <input type="time" name="time" /></label>
-  <label>Gjester <input type="number" min="1" name="guests" /></label>
-  <button type="submit">Send</button>
-</form>
+<div class="reserve">
+  <h1>Reserver ditt bord</h1>
+  <p>Velkommen til en kveld med god mat og stemning.<br>
+  Fyll ut skjemaet under, så holder vi av et bord for deg og dine.</p>
+  <a href="/menu/" class="btn" style="margin-bottom:1rem;">Se menyen</a>
+  <form method="post" action="/reserve/">
+    <label>Navn
+      <input type="text" name="name" placeholder="Ditt fulle navn" required />
+    </label>
+    <label>E-post
+      <input type="email" name="email" placeholder="din@email.no" required />
+    </label>
+    <label>Telefon
+      <input type="tel" name="phone" placeholder="Mobilnummer" required />
+    </label>
+    <label>Dato
+      <input type="date" name="date" required />
+    </label>
+    <label>Tid
+      <input type="time" name="time" required />
+    </label>
+    <label>Gjester
+      <input type="number" min="1" name="guests" placeholder="Antall personer" required />
+    </label>
+    <button type="submit">Reserver bord nå</button>
+  </form>
+</div>
 {% endblock %}
