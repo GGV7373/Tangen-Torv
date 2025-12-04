@@ -1,15 +1,27 @@
 services:
   db:
-    image: postgres:latest
+    image: mysql:latest
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=mydatabase
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=mydatabase
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
     volumes:
-        - db_data:/var/lib/postgresql/data
-        - ./database.sql:/docker-entrypoint-initdb.d/database.sql
+      - db_data:/var/lib/mysql
+      - ./database.sql:/docker-entrypoint-initdb.d/database.sql
     ports:
-      - "5432:5432"
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      - PMA_HOST=db
+      - PMA_USER=user
+      - PMA_PASSWORD=password
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
   web:
     image: nginx:latest
     ports:
@@ -20,15 +32,15 @@ services:
       - app
 
   app:
-      build:
-        context: .
-        dockerfile: Dockerfile
-      environment:
-        - DATABASE_URL=postgres://user:password@db:5432/mydatabase
-      ports:
-        - "5000:5000"
-      depends_on:
-        - db
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=mysql://user:password@db:3306/mydatabase
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
 
 volumes:
   db_data:
