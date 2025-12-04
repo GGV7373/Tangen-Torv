@@ -15,18 +15,13 @@ CREATE TABLE IF NOT EXISTS Reservasjon (
 	dato DATE NOT NULL,
 	tidspunkt TIME NOT NULL,
 	antall_personer INT NOT NULL,
-	CONSTRAINT fk_bord FOREIGN KEY (bord_id) REFERENCES Bord(id)
+	CONSTRAINT fk_bord FOREIGN KEY (bord_id) REFERENCES Bord(id),
+	INDEX idx_res_bord (bord_id),
+	INDEX idx_res_datetime (dato, tidspunkt),
+	UNIQUE KEY uniq_bord_datetime (bord_id, dato, tidspunkt)
 );
 
--- Indexes to speed up lookups by date/time and table
-CREATE INDEX IF NOT EXISTS idx_res_bord ON Reservasjon (bord_id);
-CREATE INDEX IF NOT EXISTS idx_res_datetime ON Reservasjon (dato, tidspunkt);
-
--- Prevent overlapping reservations for the same table at the exact date+time
--- Note: MySQL doesn't support functional constraints for time ranges.
--- This UNIQUE enforces one reservation per table per exact date+time slot.
-ALTER TABLE Reservasjon
-	ADD UNIQUE KEY IF NOT EXISTS uniq_bord_datetime (bord_id, dato, tidspunkt);
+-- Indexes and unique constraint are defined within the table creation above
 
 -- Seed data for tables
 INSERT INTO Bord (navn, antall_plasser) VALUES
