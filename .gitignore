@@ -28,6 +28,7 @@ staticfiles/
 
 # VS Code
 .vscode/
+.venv/
 
 # Node/Frontend
 node_modules/
