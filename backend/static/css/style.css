@@ -213,3 +213,70 @@ footer p { margin: 0.25rem 0; }
 
 /* Utility */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+/* --- Dark mode support --- */
+html.dark {
+	--bg: #191516;
+	--surface: #232021;
+	--text: #f6f2ee;
+	--muted: #bba89c;
+	--accent: #e7bfae;
+	--accent-2: #e6c08b;
+	--accent-3: #bfae9e;
+	--border: #3a2e2c;
+	--shadow: 0 8px 32px rgba(0,0,0,0.22);
+}
+
+html.dark body {
+	background: var(--bg);
+	color: var(--text);
+}
+html.dark .menu, html.dark .reserve, html.dark .card {
+	background: var(--surface);
+	border-color: var(--border);
+	color: var(--text);
+}
+html.dark header {
+	background: rgba(35,32,33,0.92);
+	box-shadow: var(--shadow);
+}
+html.dark .btn {
+	background: linear-gradient(135deg, var(--accent-3), var(--accent));
+	color: #191516;
+}
+html.dark .nav-links a {
+	color: var(--text);
+}
+html.dark .nav-links a:hover {
+	background: var(--surface);
+	color: var(--accent);
+}
+html.dark .menu-img-placeholder {
+	background: #2a2321;
+	color: #7a2d2b;
+}
+html.dark .reserve input, html.dark .reserve select, html.dark .reserve textarea {
+	background: #232021;
+	color: var(--text);
+	border-color: var(--border);
+}
+html.dark .reserve input::placeholder, html.dark .reserve textarea::placeholder {
+	color: var(--muted);
+	opacity: 0.8;
+}
+html.dark footer {
+	background: #232021;
+	color: var(--muted);
+}
+
+/* Dark mode toggle button */
+.btn-darkmode {
+	background: none;
+	border: none;
+	font-size: 1.3rem;
+	cursor: pointer;
+	color: var(--accent-3);
+	margin-left: 1.2rem;
+	transition: color 0.2s;
+}
+html.dark .btn-darkmode { color: var(--accent-2); }
