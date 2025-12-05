@@ -65,7 +65,10 @@ WSGI_APPLICATION = 'Tangen-torv.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'tangen-torv.db',
+        'OPTIONS': {
+            'timeout': 10,
+        },
     }
 }
 

@@ -6,6 +6,7 @@
   Fyll ut skjemaet under, så holder vi av et bord for deg og dine.</p>
   <a href="/menu/" class="btn" style="margin-bottom:1rem;">Se menyen</a>
   <form method="post" action="/reserve/">
+    {% csrf_token %}
     <label>Navn
       <input type="text" name="name" placeholder="Ditt fulle navn" required />
     </label>
@@ -26,5 +27,12 @@
     </label>
     <button type="submit">Reserver bord nå</button>
   </form>
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 </div>
 {% endblock %}

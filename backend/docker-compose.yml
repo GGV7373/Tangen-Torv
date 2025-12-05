@@ -1,27 +1,12 @@
 services:
-  db:
-    image: mysql:latest
-    environment:
-      - MYSQL_ROOT_PASSWORD=rootpassword
-      - MYSQL_DATABASE=mydatabase
-      - MYSQL_USER=user
-      - MYSQL_PASSWORD=password
+  sqlite-web:
+    image: coleifer/sqlite-web:latest
+    command: ["sqlite_web", "-H", "0.0.0.0", "/data/tangen-torv.db"]
+    ports:
+      - "8080:8080"
     volumes:
-      - db_data:/var/lib/mysql
-      - ./database.sql:/docker-entrypoint-initdb.d/database.sql
-    ports:
-      - "3306:3306"
+      - ./:/data
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    environment:
-      - PMA_HOST=db
-      - PMA_USER=user
-      - PMA_PASSWORD=password
-    ports:
-      - "8080:80"
-    depends_on:
-      - db
   web:
     image: nginx:alpine
     ports:
@@ -37,13 +22,10 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - DATABASE_URL=mysql://user:password@db:3306/mydatabase
+      - DATABASE_URL=sqlite:///tangen-torv.db
     ports:
       - "5000:5000"
-    depends_on:
-      - db
-
-volumes:
-  db_data:
+    volumes:
+      - ./tangen-torv.db:/app/tangen-torv.db
 
 
