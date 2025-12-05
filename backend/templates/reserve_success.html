@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Reservation Confirmed</h2>
+<p>Thank you! Your reservation has been recorded.</p>
+<p><a href="{% url 'availability' %}">Make another reservation</a></p>
+<p><a href="{% url 'home' %}">Back to home</a></p>
+{% endblock %}

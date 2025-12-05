@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Available Tables</h2>
+<form method="get" action="{% url 'availability' %}" class="form">
+  <label>Date</label>
+  <input type="date" name="date" value="{{ date }}" required>
+  <label>Time</label>
+  <input type="time" name="time" value="{{ time }}" required>
+  <label>Guests</label>
+  <input type="number" name="guests" value="{{ guests }}" min="1" required>
+  <button type="submit">Check Availability</button>
+</form>
+
+{% if error %}
+<p class="error">{{ error }}</p>
+{% endif %}
+
+{% if available_tables %}
+<table>
+  <thead>
+    <tr>
+      <th>Table</th>
+      <th>Seats</th>
+      <th>Reserve</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for t in available_tables %}
+    <tr>
+      <td>{{ t.name }}</td>
+      <td>{{ t.seats }}</td>
+      <td>
+        <form method="post" action="{% url 'submit_reservation' %}">
+          {% csrf_token %}
+          <input type="hidden" name="table_id" value="{{ t.id }}">
+          <input type="hidden" name="date" value="{{ date }}">
+          <input type="hidden" name="time" value="{{ time }}">
+          <input type="hidden" name="guests" value="{{ guests }}">
+          <input type="text" name="name" placeholder="Your name" required>
+          <input type="email" name="email" placeholder="Email (optional)">
+          <input type="text" name="phone" placeholder="Phone" required>
+          <button type="submit">Reserve</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% elif date and time and guests %}
+<p>No available tables found for your selection.</p>
+{% endif %}
+{% endblock %}
