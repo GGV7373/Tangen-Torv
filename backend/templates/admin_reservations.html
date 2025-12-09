@@ -3,6 +3,7 @@
 <div class="admin-res">
   <h1>Admin: Reservasjoner</h1>
   <p>Logget inn som {{ request.user.username }}. <a href="/accounts/logout/">Logg ut</a></p>
+  <p><strong>Total:</strong> {{ total }} | <strong>Database:</strong> {{ db_path }}</p>
   <table>
     <thead>
       <tr>

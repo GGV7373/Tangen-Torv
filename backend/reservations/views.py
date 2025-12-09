@@ -3,6 +3,7 @@ from django.http import HttpRequest, HttpResponse
 from django.contrib import messages
 from .models import Reservation
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 
 
 def home(request: HttpRequest) -> HttpResponse:
@@ -54,4 +55,6 @@ def menu(request: HttpRequest) -> HttpResponse:
 @login_required
 def admin_reservations(request: HttpRequest) -> HttpResponse:
     reservations = Reservation.objects.order_by('-created_at')[:50]
-    return render(request, 'admin_reservations.html', {"reservations": reservations})
+    total = Reservation.objects.count()
+    db_path = settings.DATABASES['default']['NAME']
+    return render(request, 'admin_reservations.html', {"reservations": reservations, "total": total, "db_path": db_path})

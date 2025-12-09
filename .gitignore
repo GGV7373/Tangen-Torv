@@ -18,6 +18,7 @@ env/
 local_settings.py
 media/
 staticfiles/
+tangen-torv.db
 
 # Migrations cache
 **/migrations/**
