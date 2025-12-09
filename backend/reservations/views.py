@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse
 from django.contrib import messages
 from .models import Reservation
+from django.contrib.auth.decorators import login_required
 
 
 def home(request: HttpRequest) -> HttpResponse:
@@ -48,3 +49,9 @@ def reserve(request: HttpRequest) -> HttpResponse:
 
 def menu(request: HttpRequest) -> HttpResponse:
     return render(request, 'menu.html')
+
+
+@login_required
+def admin_reservations(request: HttpRequest) -> HttpResponse:
+    reservations = Reservation.objects.order_by('-created_at')[:50]
+    return render(request, 'admin_reservations.html', {"reservations": reservations})
