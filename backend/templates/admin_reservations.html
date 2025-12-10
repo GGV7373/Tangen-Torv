@@ -74,6 +74,11 @@
             {% csrf_token %}
             <button type="submit">Slett</button>
           </form>
+          <form method="post" action="{% url 'send_reservation_email' r.id %}" style="margin-top:0.4rem;">
+            {% csrf_token %}
+            <input type="email" name="to_email" placeholder="kundens e-post" required style="padding:0.3rem 0.5rem; border:1px solid var(--border); border-radius:8px;">
+            <button type="submit">Send e-post</button>
+          </form>
         </td>
       </tr>
       {% empty %}

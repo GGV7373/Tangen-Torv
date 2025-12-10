@@ -1,0 +1,9 @@
+Hei {{ reservation.navn }},
+
+Takk for din reservasjon hos {{ site_name }}.
+
+Reservasjons-ID: {{ reservation.id }}
+Dato: {{ reservation.dato }} kl. {{ reservation.tidspunkt|slice:":5" }}
+
+Vi gleder oss til å se deg!
+Hilsen {{ site_name }}

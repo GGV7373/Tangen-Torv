@@ -24,9 +24,24 @@ services:
       dockerfile: Dockerfile
     environment:
       - DATABASE_URL=sqlite:///tangen-torv.db
+      # Core Django settings
+      - SECRET_KEY=change-me-in-prod
+      - DEBUG=true
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+      # Email configuration (override these in production as needed)
+      - EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
+      - EMAIL_HOST=smtp.gmail.com
+      - EMAIL_PORT=587
+      - EMAIL_USE_TLS=true
+      - EMAIL_HOST_USER=
+      - EMAIL_HOST_PASSWORD=
+      - DEFAULT_FROM_EMAIL=Tangen Torv <no-reply@localhost>
     ports:
       - "5000:5000"
     volumes:
       - ./tangen-torv.db:/app/tangen-torv.db
+    # Optional: force DNS resolver if container has DNS issues
+    # dns:
+    #   - 8.8.8.8
 
 

@@ -5,6 +5,9 @@ from django.db.models import Count
 from .models import Reservation
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.conf import settings
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404
 
 
@@ -15,6 +18,7 @@ def home(request: HttpRequest) -> HttpResponse:
 def reserve(request: HttpRequest) -> HttpResponse:
     if request.method == 'POST':
         name = request.POST.get('name')
+        email = request.POST.get('email')  # optional, used for confirmation
         phone = request.POST.get('phone')
         date_str = request.POST.get('date')
         time_str = request.POST.get('time')
@@ -48,7 +52,7 @@ def reserve(request: HttpRequest) -> HttpResponse:
                     return render(request, 'reserve.html')
 
                 # Default to first table (bord_id=1) if no table selection exists yet
-                Reservation.objects.create(
+                reservation = Reservation.objects.create(
                     navn=name,
                     telefon=phone,
                     dato=parsed_date,
@@ -56,6 +60,12 @@ def reserve(request: HttpRequest) -> HttpResponse:
                     antall_personer=guests_val,
                     bord_id=1,
                 )
+                # Send confirmation email if provided
+                if email:
+                    try:
+                        send_confirmation_email(email, reservation)
+                    except Exception as mail_err:
+                        messages.warning(request, f'Kunne ikke sende bekreftelses-e-post: {mail_err}')
                 messages.success(request, 'Reservasjonen er registrert!')
                 return redirect('reserve')
             except ValueError:
@@ -64,6 +74,34 @@ def reserve(request: HttpRequest) -> HttpResponse:
                 messages.error(request, f'Kunne ikke lagre reservasjonen. Prøv igjen. Feil: {e}')
 
     return render(request, 'reserve.html')
+def send_confirmation_email(to_email: str, reservation: Reservation) -> None:
+    """Send a plain-text confirmation email using Django's email system."""
+    subject = 'Bekreftelse på reservasjon'
+    context = {
+        'reservation': reservation,
+        'site_name': 'Tangen Torv',
+    }
+    message = render_to_string('emails/reservation_confirmation.txt', context)
+    from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', None) or 'no-reply@tangentorv.local'
+    send_mail(subject, message, from_email, [to_email], fail_silently=False)
+
+
+@login_required
+@user_passes_test(lambda u: u.is_staff)
+@require_POST
+def send_reservation_email(request: HttpRequest, pk: int) -> HttpResponse:
+    """Admin action: send a confirmation email to a provided address for a reservation."""
+    to_email = request.POST.get('to_email')
+    if not to_email:
+        messages.error(request, 'Ingen e-postadresse oppgitt.')
+        return redirect('admin_reservations')
+    res = get_object_or_404(Reservation, pk=pk)
+    try:
+        send_confirmation_email(to_email, res)
+        messages.success(request, f'Bekreftelse sendt til {to_email}.')
+    except Exception as e:
+        messages.error(request, f'Kunne ikke sende e-post: {e}')
+    return redirect('admin_reservations')
 
 def menu(request: HttpRequest) -> HttpResponse:
     return render(request, 'menu.html')
