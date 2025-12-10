@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load static %}
 <div class="menu">
     <h1>Meny</h1>
     <p>Vår meny er under utarbeidelse, men her får du en smakebit på hva som kommer.<br>
@@ -8,7 +9,7 @@
     <section class="menu-section">
         <h2>Forretter</h2>
         <div class="menu-item">
-            <div class="menu-img-placeholder">Bilde<br>kommer</div>
+            <img class="menu-img" src="{% static 'img/Carpaccio.jpg' %}" alt="Carpaccio av okse" onerror="this.style.display='none'">
             <div>
                 <strong>Carpaccio av okse</strong><br>
                 Tynne skiver av okse, ruccola, parmesan og olivenolje.<br>
@@ -16,7 +17,7 @@
             </div>
         </div>
         <div class="menu-item">
-            <div class="menu-img-placeholder"></div>
+            <img class="menu-img" src="{% static 'img/suppe.jpg' %}" alt="Husets suppe" onerror="this.style.display='none'">
             <div>
                 <strong>Husets suppe</strong><br>
                 Serveres med ferskt brød.<br>
@@ -28,7 +29,7 @@
     <section class="menu-section">
         <h2>Hovedretter</h2>
         <div class="menu-item">
-            <div class="menu-img-placeholder"></div>
+            <img class="menu-img" src="{% static 'img/Grillet-entrecote.jpg' %}" alt="Grillet entrecôte" onerror="this.style.display='none'">
             <div>
                 <strong>Grillet entrecôte</strong><br>
                 Med ovnsbakte poteter, grønnsaker og rødvinssaus.<br>
@@ -36,7 +37,7 @@
             </div>
         </div>
         <div class="menu-item">
-            <div class="menu-img-placeholder"></div>
+            <img class="menu-img" src="{% static 'img/Vegetarisk-pasta.jpg' %}" alt="Vegetarisk pasta" onerror="this.style.display='none'">
             <div>
                 <strong>Vegetarisk pasta</strong><br>
                 Sesongens grønnsaker, kremet saus og parmesan.<br>
@@ -48,7 +49,7 @@
     <section class="menu-section">
         <h2>Desserter</h2>
         <div class="menu-item">
-            <div class="menu-img-placeholder"></div>
+            <img class="menu-img" src="{% static 'img/Pannacotta.jpg' %}" alt="Pannacotta" onerror="this.style.display='none'">
             <div>
                 <strong>Pannacotta</strong><br>
                 Med bærsaus og friske bær.<br>
@@ -65,17 +66,7 @@
     gap: 1.2rem;
     margin-bottom: 1.2rem;
 }
-.menu-img-placeholder {
-    width: 90px; height: 90px;
-    background: #f3e9e3;
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    color: #bba89c;
-    font-size: 0.95rem;
-    font-style: italic;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
+.menu-img { width: 90px; height: 90px; object-fit: cover; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
 .menu-price {
     color: var(--accent-2);
     font-weight: 600;
@@ -83,7 +74,7 @@
 }
 @media (max-width: 600px) {
     .menu-item { flex-direction: column; gap: 0.5rem; }
-    .menu-img-placeholder { width: 100%; height: 60px; }
+    .menu-img { width: 100%; height: 160px; }
 }
 </style>
 {% endblock %}
