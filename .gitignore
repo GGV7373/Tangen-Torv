@@ -20,8 +20,7 @@ media/
 staticfiles/
 *.db
 backend/*.db
-tangen-torv.db
-backend/tangen-torv.db
+
 
 # Migrations cache
 **/migrations/**
@@ -29,6 +28,10 @@ backend/tangen-torv.db
 
 # SQLite database
 *.sqlite3
+*.db
+*.database
+tangen-torv.db
+backend/tangen-torv.db
 
 # VS Code
 .vscode/
