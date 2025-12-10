@@ -29,3 +29,15 @@ class Reservation(models.Model):
 
     def __str__(self):
         return f"{self.navn} - {self.dato} {self.tidspunkt} ({self.antall_personer})"
+
+
+class ReservationEmail(models.Model):
+    reservation = models.OneToOneField(Reservation, on_delete=models.CASCADE, primary_key=True, db_column='reservation_id')
+    email = models.EmailField()
+
+    class Meta:
+        db_table = 'reservation_emails'
+        managed = True
+
+    def __str__(self):
+        return f"{self.reservation_id}: {self.email}"

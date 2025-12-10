@@ -60,7 +60,7 @@ def reserve(request: HttpRequest) -> HttpResponse:
                     antall_personer=guests_val,
                     bord_id=1,
                 )
-                # Send confirmation email if provided
+                # Send confirmation email if provided (no DB storage)
                 if email:
                     try:
                         send_confirmation_email(email, reservation)
@@ -92,10 +92,10 @@ def send_confirmation_email(to_email: str, reservation: Reservation) -> None:
 def send_reservation_email(request: HttpRequest, pk: int) -> HttpResponse:
     """Admin action: send a confirmation email to a provided address for a reservation."""
     to_email = request.POST.get('to_email')
-    if not to_email:
-        messages.error(request, 'Ingen e-postadresse oppgitt.')
-        return redirect('admin_reservations')
     res = get_object_or_404(Reservation, pk=pk)
+    if not to_email:
+        messages.error(request, 'Ingen e‑postadresse oppgitt for denne reservasjonen.')
+        return redirect('admin_reservations')
     try:
         send_confirmation_email(to_email, res)
         messages.success(request, f'Bekreftelse sendt til {to_email}.')

@@ -15,3 +15,5 @@ class BordAdmin(admin.ModelAdmin):
 	search_fields = ("navn",)
 	actions = ["delete_selected"]
 	list_display_links = ("navn",)
+
+# No stored email model; emails are provided at reservation time and in admin form
