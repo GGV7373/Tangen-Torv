@@ -1,3 +1,8 @@
+/* Make button look like a text link in nav */
+.link-button {
+	font: inherit;
+	color: inherit;
+}
 /* Elegant Restaurant Theme */
 /* Color palette: warm neutrals + deep accent */
 /* Accessible contrast and large tap targets */

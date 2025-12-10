@@ -3,7 +3,7 @@ from django.http import HttpRequest, HttpResponse
 from django.contrib import messages
 from django.db.models import Count
 from .models import Reservation
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 
@@ -70,6 +70,7 @@ def menu(request: HttpRequest) -> HttpResponse:
 
 
 @login_required
+@user_passes_test(lambda u: u.is_staff)
 def admin_reservations(request: HttpRequest) -> HttpResponse:
     reservations = Reservation.objects.order_by('-id')[:50]
     total = Reservation.objects.count()
@@ -85,6 +86,7 @@ def admin_reservations(request: HttpRequest) -> HttpResponse:
 
 
 @login_required
+@user_passes_test(lambda u: u.is_staff)
 def delete_reservation(request: HttpRequest, pk: int) -> HttpResponse:
     if request.method == 'POST':
         res = get_object_or_404(Reservation, pk=pk)
