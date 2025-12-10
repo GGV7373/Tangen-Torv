@@ -4,31 +4,54 @@
   <h1>Admin: Reservasjoner</h1>
   <p>Logget inn som {{ request.user.username }}. <a href="/accounts/logout/">Logg ut</a></p>
   <p><strong>Total:</strong> {{ total }} | <strong>Database:</strong> {{ db_path }}</p>
+  <h2>Antall per dato</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Dato</th>
+        <th>Antall reservasjoner</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in counts_by_date %}
+      <tr>
+        <td>{{ item.dato }}</td>
+        <td>{{ item.count }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="3">Ingen data.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
   <table>
     <thead>
       <tr>
         <th>Navn</th>
-        <th>E-post</th>
         <th>Telefon</th>
         <th>Dato</th>
         <th>Tid</th>
         <th>Gjester</th>
-        <th>Opprettet</th>
+        <th>Bord</th>
       </tr>
     </thead>
     <tbody>
       {% for r in reservations %}
       <tr>
-        <td>{{ r.name }}</td>
-        <td>{{ r.email }}</td>
-        <td>{{ r.phone }}</td>
-        <td>{{ r.date }}</td>
-        <td>{{ r.time }}</td>
-        <td>{{ r.guests }}</td>
-        <td>{{ r.created_at }}</td>
+        <td>{{ r.navn }}</td>
+        <td>{{ r.telefon }}</td>
+        <td>{{ r.dato }}</td>
+        <td>{{ r.tidspunkt }}</td>
+        <td>{{ r.antall_personer }}</td>
+        <td>{{ r.bord_id }}</td>
+        <td>
+          <form method="post" action="{% url 'delete_reservation' r.id %}" onsubmit="return confirm('Slette denne reservasjonen?');">
+            {% csrf_token %}
+            <button type="submit">Slett</button>
+          </form>
+        </td>
       </tr>
       {% empty %}
-      <tr><td colspan="7">Ingen reservasjoner funnet.</td></tr>
+      <tr><td colspan="8">Ingen reservasjoner funnet.</td></tr>
       {% endfor %}
     </tbody>
   </table>
