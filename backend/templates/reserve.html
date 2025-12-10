@@ -5,13 +5,21 @@
   <p>Velkommen til en kveld med god mat og stemning.<br>
   Fyll ut skjemaet under, så holder vi av et bord for deg og dine.</p>
   <a href="/menu/" class="btn" style="margin-bottom:1rem;">Se menyen</a>
+  <div class="card" style="margin-bottom:1rem;">
+    <h2>Praktisk informasjon</h2>
+    <ul>
+      <li>Bestillingstider: mellom <strong>12:00</strong> og <strong>23:00</strong>.</li>
+      <li>Søndag: begrenset kapasitet – maks <strong>5 reservasjoner</strong> per dag.</li>
+      <li>Har du allergier eller ønsker? Skriv det i kommentarfeltet eller gi beskjed ved ankomst.</li>
+    </ul>
+  </div>
   <form method="post" action="/reserve/">
     {% csrf_token %}
     <label>Navn
       <input type="text" name="name" placeholder="Ditt fulle navn" required />
     </label>
     <label>E-post
-      <input type="email" name="email" placeholder="din@email.no" required />
+      <input type="email" name="email" placeholder="din@email.no" />
     </label>
     <label>Telefon
       <input type="tel" name="phone" placeholder="Mobilnummer" required />
@@ -25,8 +33,12 @@
     <label>Gjester
       <input type="number" min="1" name="guests" placeholder="Antall personer" required />
     </label>
+    <label>Kommentar (valgfritt)
+      <textarea name="note" rows="3" placeholder="Allergier, høytalere, barnevogn, osv."></textarea>
+    </label>
     <button type="submit">Reserver bord nå</button>
   </form>
+  <p style="margin-top:0.8rem;color:var(--muted)">Ved å sende inn godtar du våre vilkår for personvern. Vi lagrer kun nødvendig kontaktinfo for å bekrefte reservasjonen.</p>
   {% if messages %}
     <ul class="messages">
       {% for message in messages %}

@@ -72,16 +72,51 @@ def menu(request: HttpRequest) -> HttpResponse:
 @login_required
 @user_passes_test(lambda u: u.is_staff)
 def admin_reservations(request: HttpRequest) -> HttpResponse:
-    reservations = Reservation.objects.order_by('-id')[:50]
+    import datetime as _dt
+    # Date filter (default: today)
+    selected_date = request.GET.get('date')
+    if not selected_date:
+        today = _dt.date.today()
+        selected_date = today.strftime('%Y-%m-%d')
+
+    reservations = Reservation.objects.filter(dato=selected_date).order_by('tidspunkt')
     total = Reservation.objects.count()
     counts_by_date = list(
         Reservation.objects.values('dato').annotate(count=Count('id')).order_by('-dato')
     )
+
+    # Build schedule grid (12:00–23:00)
+    time_slots = [f"{h:02d}:00" for h in range(12, 24)]
+    schedule = {ts: [] for ts in time_slots}
+    for r in reservations:
+        ts = r.tidspunkt[:5]  # HH:MM
+        if ts in schedule:
+            schedule[ts].append(r)
+    # Provide a template-friendly list structure
+    schedule_items = [{"ts": ts, "items": schedule.get(ts, [])} for ts in time_slots]
+
+    # Stats
+    week_ago = _dt.date.today() - _dt.timedelta(days=7)
+    total_last_7 = Reservation.objects.filter(dato__gte=week_ago.strftime('%Y-%m-%d')).count()
+    by_table = list(
+        Reservation.objects.values('bord_id').annotate(count=Count('id')).order_by('-count')[:5]
+    )
+
     db_path = settings.DATABASES['default']['NAME']
     return render(
         request,
         'admin_reservations.html',
-        {"reservations": reservations, "total": total, "counts_by_date": counts_by_date, "db_path": db_path}
+        {
+            "reservations": reservations,
+            "total": total,
+            "counts_by_date": counts_by_date,
+            "db_path": db_path,
+            "selected_date": selected_date,
+            "time_slots": time_slots,
+            "schedule_items": schedule_items,
+            "total_last_7": total_last_7,
+            "by_table": by_table,
+        }
     )
 
 

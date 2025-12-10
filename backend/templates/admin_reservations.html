@@ -2,8 +2,16 @@
 {% block content %}
 <div class="admin-res">
   <h1>Admin: Reservasjoner</h1>
-  <p>Logget inn som {{ request.user.username }}. <a href="/accounts/logout/">Logg ut</a></p>
-  <p><strong>Total:</strong> {{ total }} | <strong>Database:</strong> {{ db_path }}</p>
+  <div class="stats">
+    <div class="stat"><span class="label">Total:</span> <strong>{{ total }}</strong></div>
+    <div class="stat"><span class="label">Siste 7 dager:</span> <strong>{{ total_last_7 }}</strong></div>
+    <div class="stat"><span class="label">Database:</span> <code>{{ db_path }}</code></div>
+  </div>
+  <form method="get" class="filter">
+    <label for="date">Dato</label>
+    <input type="date" id="date" name="date" value="{{ selected_date }}">
+    <button type="submit" class="btn">Filtrer</button>
+  </form>
   <h2>Antall per dato</h2>
   <table>
     <thead>
@@ -23,6 +31,24 @@
       {% endfor %}
     </tbody>
   </table>
+  <h2>Rutegraf for {{ selected_date }}</h2>
+  <div class="grid-schedule">
+    {% for s in schedule_items %}
+      <div class="slot">
+        <div class="slot-head">{{ s.ts }}</div>
+        <div class="slot-body">
+          {% for r in s.items %}
+            <div class="pill">
+              <span class="pill-name">{{ r.navn }}</span>
+              <span class="pill-meta">bord {{ r.bord_id }} • {{ r.antall_personer }}</span>
+            </div>
+          {% empty %}
+            <div class="pill pill-empty">Ingen</div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
   <table>
     <thead>
       <tr>

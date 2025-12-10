@@ -40,6 +40,8 @@ img { max-width: 100%; height: auto; display: block; }
 /* Layout */
 main { padding: 2rem 1.25rem; max-width: 1100px; margin: 0 auto; }
 
+.container { max-width: 1100px; margin: 0 auto; padding: 0 1rem; }
+
 /* Friendly typography */
 h1, h2, h3 { color: var(--accent); letter-spacing: 0.3px; }
 h1 { font-size: 2.4rem; font-weight: 800; }
@@ -140,6 +142,21 @@ header nav {
 	padding: 1.25rem;
 	box-shadow: var(--shadow);
 }
+
+.stats { display:flex; gap: 1rem; flex-wrap: wrap; margin: 0.5rem 0 1rem; }
+.stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.6rem 0.8rem; box-shadow: var(--shadow); }
+.stat .label { color: var(--muted); margin-right: 0.4rem; }
+.filter { display:flex; align-items: end; gap: 0.6rem; margin: 0.5rem 0 1.5rem; }
+.filter input[type="date"] { padding: 0.45rem 0.6rem; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+
+.grid-schedule { display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.8rem; margin-bottom: 1.6rem; }
+.slot { border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); box-shadow: var(--shadow); }
+.slot-head { padding: 0.5rem 0.7rem; background: var(--bg); border-bottom: 1px solid var(--border); font-weight: 600; color: var(--accent); }
+.slot-body { padding: 0.5rem 0.7rem; display:flex; flex-direction: column; gap: 0.4rem; }
+.pill { display:flex; justify-content: space-between; align-items: baseline; gap: 0.6rem; border: 1px solid var(--border); border-radius: 999px; padding: 0.35rem 0.7rem; }
+.pill-name { font-weight: 600; }
+.pill-meta { color: var(--muted); font-size: 0.9rem; }
+.pill-empty { opacity: 0.7; font-style: italic; }
 
 /* Forms: Reservation */
 .reserve form {
