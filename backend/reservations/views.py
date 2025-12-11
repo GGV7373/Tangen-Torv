@@ -23,6 +23,7 @@ def reserve(request: HttpRequest) -> HttpResponse:
         date_str = request.POST.get('date')
         time_str = request.POST.get('time')
         guests_str = request.POST.get('guests')
+        note = request.POST.get('note')
 
         if not all([name, phone, date_str, time_str, guests_str]):
             messages.error(request, 'Vennligst fyll ut alle feltene.')
@@ -59,6 +60,8 @@ def reserve(request: HttpRequest) -> HttpResponse:
                     tidspunkt=parsed_time,
                     antall_personer=guests_val,
                     bord_id=1,
+                    epost=email or None,
+                    kommentar=note or None,
                 )
                 # Send confirmation email if provided (no DB storage)
                 if email:
@@ -94,7 +97,9 @@ def send_reservation_email(request: HttpRequest, pk: int) -> HttpResponse:
     to_email = request.POST.get('to_email')
     res = get_object_or_404(Reservation, pk=pk)
     if not to_email:
-        messages.error(request, 'Ingen e‑postadresse oppgitt for denne reservasjonen.')
+        to_email = (res.epost or '').strip()
+    if not to_email:
+        messages.error(request, 'Ingen e-postadresse oppgitt for denne reservasjonen.')
         return redirect('admin_reservations')
     try:
         send_confirmation_email(to_email, res)

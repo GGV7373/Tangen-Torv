@@ -54,10 +54,12 @@
       <tr>
         <th>Navn</th>
         <th>Telefon</th>
+        <th>E‑post</th>
         <th>Dato</th>
         <th>Tid</th>
         <th>Gjester</th>
         <th>Bord</th>
+        <th>Kommentar</th>
       </tr>
     </thead>
     <tbody>
@@ -65,10 +67,18 @@
       <tr>
         <td>{{ r.navn }}</td>
         <td>{{ r.telefon }}</td>
+        <td>
+          {% if r.epost %}
+            <a href="mailto:{{ r.epost }}">{{ r.epost }}</a>
+          {% else %}
+            <span style="color:var(--muted)">–</span>
+          {% endif %}
+        </td>
         <td>{{ r.dato }}</td>
         <td>{{ r.tidspunkt }}</td>
         <td>{{ r.antall_personer }}</td>
         <td>{{ r.bord_id }}</td>
+        <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ r.kommentar|default:'' }}">{{ r.kommentar|default:'–' }}</td>
         <td>
           <form method="post" action="{% url 'delete_reservation' r.id %}" onsubmit="return confirm('Slette denne reservasjonen?');">
             {% csrf_token %}
@@ -76,8 +86,14 @@
           </form>
           <form method="post" action="{% url 'send_reservation_email' r.id %}" style="margin-top:0.4rem;">
             {% csrf_token %}
-            <input type="email" name="to_email" placeholder="kundens e‑post" required style="padding:0.3rem 0.5rem; border:1px solid var(--border); border-radius:8px;">
-            <button type="submit">Send e‑post</button>
+            {% if r.epost %}
+              <input type="hidden" name="to_email" value="{{ r.epost }}">
+              <button type="submit">Send e‑post</button>
+              <div style="font-size:0.85rem;color:var(--muted);margin-top:0.2rem;">{{ r.epost }}</div>
+            {% else %}
+              <input type="email" name="to_email" placeholder="kundens e‑post" required style="padding:0.3rem 0.5rem; border:1px solid var(--border); border-radius:8px;">
+              <button type="submit">Send e‑post</button>
+            {% endif %}
           </form>
         </td>
       </tr>

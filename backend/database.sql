@@ -20,6 +20,9 @@ CREATE TABLE IF NOT EXISTS Reservasjon (
     dato TEXT NOT NULL,         -- store ISO date 'YYYY-MM-DD'
     tidspunkt TEXT NOT NULL,    -- store time 'HH:MM:SS'
     antall_personer INTEGER NOT NULL,
+    -- New optional fields
+    epost TEXT,                 -- customer's email (nullable)
+    kommentar TEXT,             -- optional note from customer (nullable)
     CONSTRAINT fk_bord FOREIGN KEY (bord_id) REFERENCES Bord(id)
 );
 
@@ -37,6 +40,13 @@ INSERT OR REPLACE INTO Bord (id, navn, antall_plasser) VALUES
 -- Example reservation
 INSERT OR REPLACE INTO Reservasjon (id, bord_id, navn, telefon, dato, tidspunkt, antall_personer)
 VALUES (1, 2, 'Ola', '12345678', '2024-06-10', '18:00:00', 2);
+
+-- ---- Upgrade existing database (run once) ----
+-- SQLite doesn't support IF NOT EXISTS for columns.
+-- Run these ALTERs once against an existing DB to add the new fields.
+-- If the columns already exist, these statements will fail; ignore those errors.
+-- ALTER TABLE Reservasjon ADD COLUMN epost TEXT;
+-- ALTER TABLE Reservasjon ADD COLUMN kommentar TEXT;
 
 -- View: Available tables prototype (note: SQLite lacks parameterized views; keep columns simple)
 DROP VIEW IF EXISTS AvailableTables;

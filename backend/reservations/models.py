@@ -22,6 +22,8 @@ class Reservation(models.Model):
     dato = models.CharField(max_length=10)
     tidspunkt = models.CharField(max_length=8)
     antall_personer = models.IntegerField()
+    epost = models.TextField(null=True, blank=True)
+    kommentar = models.TextField(null=True, blank=True)
 
     class Meta:
         db_table = 'Reservasjon'
