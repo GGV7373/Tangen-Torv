@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Reservation Confirmation</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { padding: 20px; background: #f9f9f9; border-radius: 8px; }
+        h2 { color: #2c3e50; }
+        p { margin: 8px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Hei, {{ reservation.navn }}!</h2>
+        <p>Din reservasjon <strong>#{{ reservation.id }}</strong> er bekreftet!</p>
+        <p><strong>Dato:</strong> {{ reservation.dato }} kl. {{ reservation.tidspunkt }}</p>
+        <p><strong>Antall gjester:</strong> {{ reservation.antall_personer }}</p>
+        {% if reservation.kommentar %}
+        <p><strong>Spesielle ønsker:</strong> {{ reservation.kommentar }}</p>
+        {% endif %}
+        <p>Takk for at du bestilte hos oss!</p>
+    </div>
+</body>
+</html>

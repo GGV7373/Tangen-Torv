@@ -39,15 +39,6 @@
       </nav>
     </header>
     <main>
-      {% if messages %}
-      <div class="flash-messages" style="max-width:1000px;margin:0 auto 1rem;">
-        {% for message in messages %}
-          <div class="flash {{ message.tags }}" style="padding:0.6rem 0.9rem;border-radius:10px;margin:0.4rem 0;background:var(--bg-2);border:1px solid var(--border);">
-            {{ message }}
-          </div>
-        {% endfor %}
-      </div>
-      {% endif %}
       {% block content %}{% endblock %}
     </main>
     <footer>
