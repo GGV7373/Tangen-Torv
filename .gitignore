@@ -59,3 +59,4 @@ pytest_cache/
 # Environment variables
 *.env
 .env.*
+sendgrid.env
