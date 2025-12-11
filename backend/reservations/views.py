@@ -79,14 +79,22 @@ def reserve(request: HttpRequest) -> HttpResponse:
     return render(request, 'reserve.html')
 def send_confirmation_email(to_email: str, reservation: Reservation) -> None:
     """Send a plain-text confirmation email using Django's email system."""
-    subject = 'Bekreftelse på reservasjon'
-    context = {
-        'reservation': reservation,
-        'site_name': 'Tangen Torv',
-    }
-    message = render_to_string('emails/reservation_confirmation.txt', context)
-    from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', None) or 'no-reply@tangentorv.local'
-    send_mail(subject, message, from_email, [to_email], fail_silently=False)
+    subject = "Reservation Confirmation"
+    message = (
+        f"Hello,\n\n"
+        f"Your reservation #{reservation.id} is confirmed!\n"
+        f"Date: {reservation.dato} at {reservation.tidspunkt}\n"
+        f"Guests: {reservation.antall_personer}\n"
+        f"Thank you for booking with us."
+    )
+
+    send_mail(
+        subject,
+        message,
+        getattr(settings, 'EMAIL_HOST_USER', None) or getattr(settings, 'DEFAULT_FROM_EMAIL', 'no-reply@localhost'),
+        [to_email],
+        fail_silently=False,
+    )
 
 
 @login_required

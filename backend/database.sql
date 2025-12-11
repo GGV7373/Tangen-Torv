@@ -20,7 +20,6 @@ CREATE TABLE IF NOT EXISTS Reservasjon (
     dato TEXT NOT NULL,         -- store ISO date 'YYYY-MM-DD'
     tidspunkt TEXT NOT NULL,    -- store time 'HH:MM:SS'
     antall_personer INTEGER NOT NULL,
-    -- New optional fields
     epost TEXT,                 -- customer's email (nullable)
     kommentar TEXT,             -- optional note from customer (nullable)
     CONSTRAINT fk_bord FOREIGN KEY (bord_id) REFERENCES Bord(id)
@@ -35,11 +34,16 @@ CREATE UNIQUE INDEX IF NOT EXISTS uniq_bord_datetime ON Reservasjon (bord_id, da
 INSERT OR REPLACE INTO Bord (id, navn, antall_plasser) VALUES
     (1, 'Bord 1', 4),
     (2, 'Bord 2', 2),
-    (3, 'Bord 3', 6);
+    (3, 'Bord 3', 6),
+    (4, 'Bord 4', 4),
+    (5, 'Bord 5', 2),
+    (6, 'Bord 6', 8);
+
+
 
 -- Example reservation
-INSERT OR REPLACE INTO Reservasjon (id, bord_id, navn, telefon, dato, tidspunkt, antall_personer)
-VALUES (1, 2, 'Ola', '12345678', '2024-06-10', '18:00:00', 2);
+INSERT OR REPLACE INTO Reservasjon (id, bord_id, navn, telefon, dato, tidspunkt, antall_personer, epost, kommentar)
+VALUES (1, 2, 'Ola', '12345678', '2024-06-10', '18:00:00', 2, 'hello@gmail.com', 'Vennligst plasser meg ved vinduet.');
 
 -- ---- Upgrade existing database (run once) ----
 -- SQLite doesn't support IF NOT EXISTS for columns.
