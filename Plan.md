@@ -1,86 +1,94 @@
-# Prosjektplan (5 dager)
+# Prosjektstatus og Fremdriftsplan
 
-Denne planen bryter ned arbeidet per dag med mål, konkrete oppgaver, leveranser og sjekkpunkter.
+## Fullført arbeid
 
-## Dag 1 — Oppsett og grunnmur
-- Mål: Kjørende Django-prosjekt med mappeoppsett, base-template og statiske filer.
-- Oppgaver:
-	- Opprette prosjektstruktur og mappehierarki (templates, static/css, static/js, static/img).
-	- Starte Django-prosjekt og bekrefte at serveren starter lokalt.
-	- Konfigurere `settings.py` for `TEMPLATES` og `STATICFILES_DIRS`.
-	- Lage `base.html` + enkel `home.html` med nav til Hjem/Meny/Reservasjon.
-	- Legge inn `.gitignore` og initial commit.
-- Leveranser:
-	- Kjørende server på http://127.0.0.1:8000/.
-	- Skjelett for templates og statiske filer.
-	- PR/commit med oppsett.
-- Sjekkpunkter:
-	- `python manage.py runserver` fungerer uten feil.
-	- Enkle sider rendres fra templates.
+### Dag 1 — Oppsett og grunnmur (FULLFØRT)
+- [X] Django-prosjekt opprettet med fullstendig mappehierarki
+- [X] Templates-struktur: `base.html`, `home.html`, `menu.html`, `reserve.html`, `admin_reservations.html`
+- [X] Statiske filer: `static/css/style.css`, `static/js/script.js`
+- [X] Registrering-templates: `registration/login.html`
+- [X] E-post-template: `emails/reservation_confirmation.html`
 
-## Dag 2 — Reservasjoner (modeller og admin)
-- Mål: Definert `Reservation`-modell og tilgjengelig i admin.
-- Oppgaver:
-	- Opprette app `reservations` og legge i `INSTALLED_APPS`.
-	- Modellfelt: `name`, `email`, `phone`, `date`, `time`, `guests`, `created_at`.
-	- Kjør `makemigrations` og `migrate`.
-	- Registrere modellen i `admin.py` med nyttig `list_display`/filtre.
-	- Opprette superbruker og teste admin-panelet.
-- Leveranser:
-	- Databasetabeller opprettet og vises i admin.
-	- Skjermbilde av admin-liste for reservasjonsobjekter.
-- Sjekkpunkter:
-	- `python manage.py makemigrations && python manage.py migrate` er OK.
-	- `python manage.py createsuperuser` og innlogging i `/admin/` fungerer.
+### Dag 2 — Database og modeller (FULLFØRT)
+- [X] SQLite-database (`tangen-torv.db`) konfigurert
+- [X] Modeller: `Bord` og `Reservasjon` med alle felter:
+  - Bord: `id`, `navn`, `antall_plasser`
+  - Reservasjon: `id`, `bord_id` (FK), `navn`, `telefon`, `dato`, `tidspunkt`, `antall_personer`, `epost`, `kommentar`
+- [X] Database-schema dokumentert in `database.sql` og `Database.md`
+- [X] Admin-panelet konfigurert med tilgang til begge modeller
+- [X] Seed data for 6 bord
 
-## Dag 3 — Views, URL-er og templates
-- Mål: Ruter for Hjem, Meny og Reservasjon med grunnleggende visninger.
-- Oppgaver:
-	- Lage `reservations.urls` og koble til prosjektets `urls.py`.
-	- Implementere `home`, `menu`, `reserve`-views.
-	- Templates: `home.html`, `menu.html`, `reserve.html` (skjema visning, ingen lagring ennå).
-	- Grunnleggende styling i `static/css/style.css`.
-- Leveranser:
-	- Navigasjon mellom sider fungerer.
-	- Skjermbilder av hver side.
-- Sjekkpunkter:
-	- Alle ruter svarer med HTTP 200 og riktig template.
+### Dag 3 — Views og URL-routing (FULLFØRT)
+- [X] URL-routing konfigurert for alle sider
+- [X] Views implementert: `home`, `menu`, `reserve`, `admin_reservations`
+- [X] Autentisering: Login/logout-funksjonalitet
+- [X] Staff-beskyttet admin-visning for reservasjoner
 
-## Dag 4 — Koble frontend og backend (skjema → lagring)
-- Mål: Innsendt reservasjon lagres i DB med enkel validering og tilbakemelding.
-- Oppgaver:
-	- Lage `ModelForm` for `Reservation`.
-	- Håndtere `POST` i `reserve`-view, validere og lagre.
-	- Vise suksessmelding/redirect etter innsending (Django messages).
-	- Enkel klientside-validering (HTML5-attributter) ved behov.
-- Leveranser:
-	- Full flyt: Skjema → validering → lagring → bekreftelse.
-	- Et par test-innslag i databasen verifisert i admin.
-- Sjekkpunkter:
-	- Ugyldige data gir feilmeldinger i form.
-	- Gyldige data dukker opp i admin-listen.
+### Dag 4 — Skjema og forretningslogikk (FULLFØRT)
+- [X] Reservasjonsskjema med validering
+- [X] Forretningsregler implementert:
+  - Tidsvindu: kun mellom kl. 12:00-23:00
+  - Maks reservasjoner per dag: 10 (5 på søndager)
+- [X] POST-håndtering med lagring til database
+- [X] Django messages for suksess/feilmeldinger
+- [X] E-postbekreftelse ved reservasjon (HTML-format)
 
-## Dag 5 — Test, feilretting og deploy-klargjøring
-- Mål: Stabilt minimumsprodukt og klar plan for deploy.
-- Oppgaver:
-	- Legge til enkle tester (modell + view). Sette opp `pytest` om ønskelig.
-	- Rydde opp i `README.md` (kjøre-instruksjoner) og `requirements.txt`.
-	- Prod-innstillinger: `ALLOWED_HOSTS`, statiske filer, `.env`-støtte.
-	- Velge deploy (f.eks. Railway/Render) eller Docker-klargjøring.
-- Leveranser:
-	- `requirements.txt`, oppdatert README, enkel test-suite som kjører grønt.
-	- Deploy-notat med steg for valgt plattform.
-- Sjekkpunkter:
-	- `python manage.py collectstatic` fungerer for prod-setup (om aktuelt).
-	- Minst én grønn test for hver del (modell/view).
+### Dag 5 — Docker og deployment (FULLFØRT)
+- [X] Docker-oppsett med `docker-compose.yml`
+- [X] Tjenester konfigurert:
+  - `sqlite-web`: Database-administrasjon (port 8080)
+  - `app`: Django-applikasjon (port 5000)
+  - `web`: Nginx reverse proxy (port 80)
+- [X] Miljøvariabler for produksjon
+- [X] E-postkonfigurasjon (SMTP Gmail)
 
-## Strekkmål (om tid)
-- Enkel e-postbekreftelse (console backend i dev).
-- Paginering/søk i admin og/eller egen liste-side.
-- Bedre design og mobiltilpasning.
+## Pågående arbeid
 
-## Daglige rutiner
-- Start: Kort status og plan for dagen (10 min).
-- Midt på dagen: Sjekkpunkt og prioriteringsjustering (5 min).
-- Slutt: Oppsummering, commit/PR, oppdater `README.md`/Plan.
+### Database-synkronisering
+- Problem: SQL-filen oppdateres ikke automatisk til lokal database
+- Løsning nødvendig: Kjøre `database.sql` mot `tangen-torv.db`
+
+## Gjenstående oppgaver
+
+### Testing og kvalitetssikring
+- [ ] Skrive enhetstester for modeller
+- [ ] Skrive integrasjonstester for views
+- [ ] Teste e-postfunksjonalitet i produksjonsmiljø
+- [ ] Validere forretningsregler grundig
+
+### Forbedringer og optimalisering
+- [ ] Bordvalg-funksjonalitet (automatisk tildeling av ledig bord)
+- [ ] Konfliktsjekk: sikre at samme bord ikke dobbeltbookes
+- [ ] Admin-side for å sende e-post til eksisterende reservasjoner
+- [ ] Responsivt design for mobil
+- [ ] Forbedret feilhåndtering og logging
+
+### Deployment
+- [ ] Produksjons-secrets (SECRET_KEY, e-postpassord)
+- [ ] HTTPS-konfigurasjon
+- [ ] Backup-strategi for database
+- [ ] Overvåking og logging
+
+## Hvordan kjøre prosjektet
+
+### Lokalt (utviklingsmiljø)
+```bash
+cd backend
+python manage.py runserver
+```
+Applikasjonen kjører på http://127.0.0.1:8000/
+
+### Med Docker
+```bash
+cd backend
+docker-compose up
+```
+- Django-app: http://localhost:5000
+- Nginx: http://localhost:80
+- SQLite Web Admin: http://localhost:8080
+
+## Notater
+- Database: SQLite (`backend/tangen-torv.db`)
+- Django models bruker `managed = False` - schema håndteres manuelt via SQL
+- E-post: Konfigurert med Gmail SMTP (se `settings.py` og `docker-compose.yml`)
 

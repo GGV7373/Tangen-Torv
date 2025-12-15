@@ -13,12 +13,14 @@ En liste over bord som kan reserveres.
 ## Reservasjon
 Reservasjoner knyttes til et bord via fremmednøkkel.
 
-| id | bord_id (FK) | navn | telefon | dato       | tidspunkt | antall_personer |
-|----|--------------|------|---------|------------|-----------|-----------------|
-| 1  | 2            | Ola  | 12345678| 2024-06-10 | 18:00     | 2               |
-| ...| ...          | ...  | ...     | ...        | ...       | ...             |
+| id | bord_id (FK) | navn | telefon | dato       | tidspunkt | antall_personer | epost              | kommentar                          |
+|----|--------------|------|---------|------------|-----------|-----------------|--------------------|------------------------------------|
+| 1  | 2            | Ola  | 12345678| 2024-06-10 | 18:00:00  | 2               | hello@gmail.com    | Vennligst plasser meg ved vinduet. |
+| ...| ...          | ...  | ...     | ...        | ...       | ...             | ...                | ...                                |
 
 - `bord_id` er en fremmednøkkel som peker til `Bord.id`.
+- `epost` er kundens e-postadresse (valgfri).
+- `kommentar` er en valgfri merknad fra kunden.
 
 ## Fremmednøkler og relasjoner
 - **Bord** har en primærnøkkel `id`.
