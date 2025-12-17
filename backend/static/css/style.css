@@ -1,3 +1,446 @@
+<<<<<<< Updated upstream
 body { font-family: system-ui, sans-serif; margin: 0; }
 header nav { display: flex; gap: 1rem; padding: 1rem; background: #f3f3f3; }
 main { padding: 1rem; }
+=======
+/* Make button look like a text link in nav */
+.link-button {
+	font: inherit;
+	color: inherit;
+}
+/* Elegant Restaurant Theme */
+/* Color palette: warm neutrals + deep accent */
+/* Accessible contrast and large tap targets */
+
+:root {
+	--bg: #faf7f2;               /* soft parchment */
+	--surface: #ffffff;          /* card/background */
+	--text: #2b2b2b;             /* primary text */
+	--muted: #6b6b6b;            /* secondary text */
+	--accent: #7a2d2b;           /* deep wine red */
+	--accent-2: #c58f5c;         /* warm caramel */
+	--accent-3: #2f4f4f;         /* slate green */
+	--border: #e4ded4;           /* subtle borders */
+	--shadow: 0 8px 24px rgba(0,0,0,0.08);
+	--radius: 14px;
+	--radius-sm: 10px;
+	--radius-lg: 22px;
+}
+
+/* Global reset & base */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+	margin: 0;
+	background: var(--bg);
+	color: var(--text);
+	font-family: "Inter", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+	line-height: 1.68;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+/* Layout */
+main { padding: 2rem 1.25rem; max-width: 1100px; margin: 0 auto; }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 1rem; }
+
+/* Friendly typography */
+h1, h2, h3 { color: var(--accent); letter-spacing: 0.3px; }
+h1 { font-size: 2.4rem; font-weight: 800; }
+h2 { font-size: 1.8rem; font-weight: 700; }
+h3 { font-size: 1.3rem; font-weight: 600; }
+
+p { color: var(--text); opacity: 0.92; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:hover { color: var(--accent-2); }
+
+/* Header & Navigation */
+header {
+	position: sticky;
+	top: 0;
+	z-index: 50;
+	background: rgba(255,255,255,0.86);
+	backdrop-filter: saturate(140%) blur(8px);
+	box-shadow: var(--shadow);
+}
+
+header nav {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 0.75rem 1rem;
+	max-width: 1100px;
+	margin: 0 auto;
+}
+
+.brand {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.25px;
+	color: var(--accent);
+}
+
+.nav-links {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.nav-links a {
+	text-decoration: none;
+	color: var(--text);
+	padding: 0.6rem 0.9rem;
+	border-radius: var(--radius-sm);
+	transition: transform 120ms ease, background-color 120ms ease, color 120ms ease, box-shadow 120ms ease;
+}
+
+.nav-links a:hover {
+	background: var(--bg);
+	color: var(--accent);
+	transform: translateY(-1px);
+	box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.btn {
+	display: inline-block;
+	text-decoration: none;
+	color: #fff;
+	background: linear-gradient(135deg, var(--accent), #5f1f1d);
+	padding: 0.7rem 1.1rem;
+	border-radius: var(--radius-sm);
+	box-shadow: var(--shadow);
+	transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+}
+
+.btn:hover { transform: translateY(-2px); filter: brightness(1.05); }
+.btn:active { transform: translateY(0); filter: brightness(0.98); }
+
+/* Hero / Head */
+.head {
+	background: radial-gradient(1000px 350px at 20% -100%, rgba(122,45,43,0.08), transparent),
+							radial-gradient(800px 300px at 80% -120%, rgba(197,143,92,0.08), transparent);
+	border-radius: var(--radius-lg);
+	padding: 2rem;
+	box-shadow: var(--shadow);
+}
+
+.head h1 {
+	margin: 0 0 0.5rem 0;
+	font-size: 2.2rem;
+	letter-spacing: 0.2px;
+}
+
+.head p { color: var(--muted); margin: 0.25rem 0 1rem; }
+.head .btn { margin-top: 0.5rem; }
+
+/* Sections */
+.menu, .reserve {
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	padding: 1.25rem;
+	box-shadow: var(--shadow);
+}
+
+.stats { display:flex; gap: 1rem; flex-wrap: wrap; margin: 0.5rem 0 1rem; }
+.stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.6rem 0.8rem; box-shadow: var(--shadow); }
+.stat .label { color: var(--muted); margin-right: 0.4rem; }
+.filter { display:flex; align-items: end; gap: 0.6rem; margin: 0.5rem 0 1.5rem; }
+.filter input[type="date"] { padding: 0.45rem 0.6rem; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+
+.grid-schedule { display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.8rem; margin-bottom: 1.6rem; }
+.slot { border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); box-shadow: var(--shadow); }
+.slot-head { padding: 0.5rem 0.7rem; background: var(--bg); border-bottom: 1px solid var(--border); font-weight: 600; color: var(--accent); }
+.slot-body { padding: 0.5rem 0.7rem; display:flex; flex-direction: column; gap: 0.4rem; }
+.pill { display:flex; justify-content: space-between; align-items: baseline; gap: 0.6rem; border: 1px solid var(--border); border-radius: 999px; padding: 0.35rem 0.7rem; }
+.pill-name { font-weight: 600; }
+.pill-meta { color: var(--muted); font-size: 0.9rem; }
+.pill-empty { opacity: 0.7; font-style: italic; }
+
+/* Forms: Reservation */
+.reserve form {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem 1rem;
+}
+
+.reserve label {
+	display: grid;
+	gap: 0.4rem;
+	color: var(--text);
+	font-weight: 600;
+}
+
+.reserve input, .reserve select, .reserve textarea {
+	appearance: none;
+	width: 100%;
+	padding: 0.65rem 0.75rem;
+	border-radius: var(--radius-sm);
+	border: 1px solid var(--border);
+	background: #fff;
+	color: var(--text);
+	box-shadow: 0 2px 10px rgba(0,0,0,0.03) inset;
+	transition: border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
+}
+
+.reserve input::placeholder, .reserve textarea::placeholder {
+	color: var(--muted);
+	opacity: 0.8;
+}
+
+.reserve input:focus, .reserve select:focus, .reserve textarea:focus {
+	outline: none;
+	border-color: var(--accent-2);
+	box-shadow: 0 0 0 4px rgba(197,143,92,0.18);
+}
+
+.reserve button[type="submit"] {
+	grid-column: span 2;
+	justify-self: start;
+	margin-top: 0.5rem;
+}
+
+.reserve button[type="submit"]::after {
+	content: " →";
+	transition: transform 150ms ease;
+}
+.reserve button[type="submit"]:hover::after { transform: translateX(2px); }
+
+/* Cards & content */
+.card {
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	padding: 1rem;
+	box-shadow: var(--shadow);
+}
+
+/* Footer */
+footer {
+	margin-top: 3rem;
+	padding: 1.25rem;
+	color: var(--muted);
+	text-align: center;
+}
+
+footer p { margin: 0.25rem 0; }
+
+/* Responsive */
+@media (max-width: 760px) {
+	header nav { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+	.reserve form { grid-template-columns: 1fr; }
+	.btn { width: 100%; text-align: center; }
+}
+
+/* Utility */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+/* --- Dark mode support --- */
+html.dark {
+	--bg: #191516;
+	--surface: #232021;
+	--text: #f6f2ee;
+	--muted: #bba89c;
+	--accent: #e7bfae;
+	--accent-2: #e6c08b;
+	--accent-3: #bfae9e;
+	--border: #3a2e2c;
+	--shadow: 0 8px 32px rgba(0,0,0,0.22);
+}
+
+html.dark body {
+	background: var(--bg);
+	color: var(--text);
+}
+html.dark .menu, html.dark .reserve, html.dark .card {
+	background: var(--surface);
+	border-color: var(--border);
+	color: var(--text);
+}
+html.dark header {
+	background: rgba(35,32,33,0.92);
+	box-shadow: var(--shadow);
+}
+html.dark .btn {
+	background: linear-gradient(135deg, var(--accent-3), var(--accent));
+	color: #191516;
+}
+html.dark .nav-links a {
+	color: var(--text);
+}
+html.dark .nav-links a:hover {
+	background: var(--surface);
+	color: var(--accent);
+}
+html.dark .menu-img-placeholder {
+	background: #2a2321;
+	color: #7a2d2b;
+}
+html.dark .reserve input, html.dark .reserve select, html.dark .reserve textarea {
+	background: #232021;
+	color: var(--text);
+	border-color: var(--border);
+}
+html.dark .reserve input::placeholder, html.dark .reserve textarea::placeholder {
+	color: var(--muted);
+	opacity: 0.8;
+}
+html.dark footer {
+	background: #232021;
+	color: var(--muted);
+}
+
+/* Dark mode toggle button */
+.btn-darkmode {
+	background: none;
+	border: none;
+	font-size: 1.3rem;
+	cursor: pointer;
+	color: var(--accent-3);
+	margin-left: 1.2rem;
+	transition: color 0.2s;
+}
+html.dark .btn-darkmode { color: var(--accent-2); }
+
+/* Reservations Grid */
+.reservations-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+	gap: 1.2rem;
+	margin: 1.5rem 0;
+}
+
+.reservation-card {
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	padding: 1.2rem;
+	box-shadow: var(--shadow);
+	transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.reservation-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+}
+
+.card-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 1rem;
+	padding-bottom: 0.8rem;
+	border-bottom: 1px solid var(--border);
+}
+
+.card-header h3 {
+	margin: 0;
+	font-size: 1.3rem;
+	color: var(--accent);
+}
+
+.time-badge {
+	background: var(--accent);
+	color: white;
+	padding: 0.3rem 0.7rem;
+	border-radius: 999px;
+	font-size: 0.9rem;
+	font-weight: 600;
+}
+
+.card-body {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+	margin-bottom: 1rem;
+}
+
+.card-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	gap: 0.5rem;
+}
+
+.card-row .label {
+	color: var(--muted);
+	font-weight: 600;
+	font-size: 0.9rem;
+}
+
+.card-row span:last-child,
+.card-row a {
+	color: var(--text);
+	text-align: right;
+}
+
+.card-actions {
+	display: flex;
+	gap: 0.6rem;
+	flex-wrap: wrap;
+	padding-top: 0.8rem;
+	border-top: 1px solid var(--border);
+}
+
+.btn-primary {
+	background: linear-gradient(135deg, var(--accent), #5f1f1d);
+	color: white;
+	border: none;
+	padding: 0.5rem 1rem;
+	border-radius: var(--radius-sm);
+	cursor: pointer;
+	font-weight: 600;
+	transition: transform 120ms ease, filter 120ms ease;
+}
+
+.btn-primary:hover {
+	transform: translateY(-1px);
+	filter: brightness(1.1);
+}
+
+.btn-danger {
+	background: linear-gradient(135deg, #c53030, #9b2c2c);
+	color: white;
+	border: none;
+	padding: 0.5rem 1rem;
+	border-radius: var(--radius-sm);
+	cursor: pointer;
+	font-weight: 600;
+	transition: transform 120ms ease, filter 120ms ease;
+}
+
+.btn-danger:hover {
+	transform: translateY(-1px);
+	filter: brightness(1.1);
+}
+
+.empty-state {
+	grid-column: 1 / -1;
+	text-align: center;
+	padding: 3rem 1rem;
+	color: var(--muted);
+	font-size: 1.1rem;
+}
+
+/* Dark mode for reservation cards */
+html.dark .reservation-card {
+	background: var(--surface);
+	border-color: var(--border);
+}
+
+html.dark .time-badge {
+	background: var(--accent-2);
+	color: #191516;
+}
+
+html.dark .card-row span:last-child,
+html.dark .card-row a {
+	color: var(--text);
+}
+>>>>>>> Stashed changes

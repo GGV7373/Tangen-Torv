@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="admin-res">
+  <h1>Admin: Reservasjoner</h1>
+  <div class="stats">
+    <div class="stat"><span class="label">Total:</span> <strong>{{ total }}</strong></div>
+    <div class="stat"><span class="label">Siste 7 dager:</span> <strong>{{ total_last_7 }}</strong></div>
+    <div class="stat"><span class="label">Database:</span> <code>{{ db_path }}</code></div>
+  </div>
+  <form method="get" class="filter">
+    <label for="date">Dato</label>
+    <input type="date" id="date" name="date" value="{{ selected_date }}">
+    <button type="submit" class="btn">Filtrer</button>
+  </form>
+  <h2>Antall per dato</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Dato</th>
+        <th>Antall reservasjoner</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in counts_by_date %}
+      <tr>
+        <td>{{ item.dato }}</td>
+        <td>{{ item.count }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="3">Ingen data.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <h2>Rutegraf for {{ selected_date }}</h2>
+  <div class="grid-schedule">
+    {% for s in schedule_items %}
+      <div class="slot">
+        <div class="slot-head">{{ s.ts }}</div>
+        <div class="slot-body">
+          {% for r in s.items %}
+            <div class="pill">
+              <span class="pill-name">{{ r.navn }}</span>
+              <span class="pill-meta">bord {{ r.bord_id }} • {{ r.antall_personer }}</span>
+            </div>
+          {% empty %}
+            <div class="pill pill-empty">Ingen</div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  
+  <h2>Reservasjoner for {{ selected_date }}</h2>
+  <div class="reservations-grid">
+    {% for r in reservations %}
+    <div class="reservation-card">
+      <div class="card-header">
+        <h3>{{ r.navn }}</h3>
+        <span class="time-badge">{{ r.tidspunkt }}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <span class="label">Telefon:</span>
+          <span>{{ r.telefon }}</span>
+        </div>
+        <div class="card-row">
+          <span class="label">E-post:</span>
+          {% if r.epost %}
+            <a href="mailto:{{ r.epost }}">{{ r.epost }}</a>
+          {% else %}
+            <span style="color:var(--muted)">–</span>
+          {% endif %}
+        </div>
+        <div class="card-row">
+          <span class="label">Dato:</span>
+          <span>{{ r.dato }}</span>
+        </div>
+        <div class="card-row">
+          <span class="label">Gjester:</span>
+          <span>{{ r.antall_personer }}</span>
+        </div>
+        <div class="card-row">
+          <span class="label">Bord:</span>
+          <span>{{ r.bord_id }}</span>
+        </div>
+        {% if r.kommentar %}
+        <div class="card-row">
+          <span class="label">Kommentar:</span>
+          <span>{{ r.kommentar }}</span>
+        </div>
+        {% endif %}
+      </div>
+      <div class="card-actions">
+        <form method="post" action="{% url 'delete_reservation' r.id %}" onsubmit="return confirm('Slette denne reservasjonen?');" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Slett</button>
+        </form>
+        <form method="post" action="{% url 'send_reservation_email' r.id %}" style="display:inline;">
+          {% csrf_token %}
+          {% if r.epost %}
+            <input type="hidden" name="to_email" value="{{ r.epost }}">
+            <button type="submit" class="btn btn-primary">Send e-post</button>
+          {% else %}
+            <input type="email" name="to_email" placeholder="E-post" required style="padding:0.4rem 0.6rem; border:1px solid var(--border); border-radius:4px; margin-right:0.3rem;">
+            <button type="submit" class="btn btn-primary">Send e-post</button>
+          {% endif %}
+        </form>
+      </div>
+    </div>
+    {% empty %}
+    <div class="empty-state">Ingen reservasjoner funnet.</div>
+    {% endfor %}
+  </div>
+  
+  <h2>Detaljert liste</h2>
+  <div class="detailed-grid">
+    <div class="grid-row grid-head">
+      <div class="cell">Navn</div>
+      <div class="cell">Telefon</div>
+      <div class="cell">E‑post</div>
+      <div class="cell">Dato</div>
+      <div class="cell">Tid</div>
+      <div class="cell">Gjester</div>
+      <div class="cell">Bord</div>
+      <div class="cell">Kommentar</div>
+      <div class="cell">Handlinger</div>
+    </div>
+
+    {% for r in reservations %}
+    <div class="grid-row">
+      <div class="cell name">{{ r.navn }}</div>
+      <div class="cell phone">{{ r.telefon }}</div>
+      <div class="cell email">
+        {% if r.epost %}
+          <a href="mailto:{{ r.epost }}">{{ r.epost }}</a>
+        {% else %}
+          <span style="color:var(--muted)">–</span>
+        {% endif %}
+      </div>
+      <div class="cell date">{{ r.dato }}</div>
+      <div class="cell time">{{ r.tidspunkt }}</div>
+      <div class="cell guests">{{ r.antall_personer }}</div>
+      <div class="cell table">{{ r.bord_id }}</div>
+      <div class="cell comment" title="{{ r.kommentar|default:'' }}" style="max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+        {{ r.kommentar|default:'–' }}
+      </div>
+      <div class="cell actions">
+        <form method="post" action="{% url 'delete_reservation' r.id %}" onsubmit="return confirm('Slette denne reservasjonen?');" style="display:inline-block;margin-right:0.35rem;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-sm btn-danger">Slett</button>
+        </form>
+
+        <form method="post" action="{% url 'send_reservation_email' r.id %}" style="display:inline-block;">
+          {% csrf_token %}
+          {% if r.epost %}
+            <input type="hidden" name="to_email" value="{{ r.epost }}">
+            <button type="submit" class="btn btn-sm btn-primary">Send e‑post</button>
+          {% else %}
+            <input type="email" name="to_email" placeholder="E‑post" required style="padding:0.25rem 0.4rem; border:1px solid var(--border); border-radius:6px; margin-right:0.3rem;">
+            <button type="submit" class="btn btn-sm btn-primary">Send</button>
+          {% endif %}
+        </form>
+      </div>
+    </div>
+    {% empty %}
+    <div class="grid-empty">Ingen reservasjoner funnet.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
