@@ -1,26 +1,48 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="head">
-    <h1>Velkommen til Tangen Torv</h1>
-    <p style="font-size:1.2rem; color:var(--accent); font-weight:600;">Et nytt møtested på bryggekanten!</p>
-    <p>Vi åpner dørene for deg som søker noe nytt – et sted hvor smaken, stemningen og gjestfriheten står i sentrum.<br>
+<div class="section-container" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe); border: none; box-shadow: var(--shadow-lg);">
+    <h1 style="margin-top: 0; font-size: 2.5rem; color: var(--accent);">Velkommen til Tangen Torv</h1>
+    <p style="font-size: 1.3rem; color: var(--accent-2); font-weight: 700; margin: 0.5rem 0 1rem;">Et nytt møtested på bryggekanten!</p>
+    <p style="font-size: 1.1rem; line-height: 1.7; color: var(--text); opacity: 0.9;">Vi åpner dørene for deg som søker noe nytt – et sted hvor smaken, stemningen og gjestfriheten står i sentrum.<br>
     Hos oss får du nydelig mat, hyggelig atmosfære og personlig service – akkurat slik du ønsker det.</p>
-    <p>Er du klar for å oppdage ditt nye favorittsted?</p>
-    <a href="/reserve/" class="btn">Reserver et bord</a>
+    <p style="font-size: 1.1rem; color: var(--muted); margin-bottom: 1.5rem;">Er du klar for å oppdage ditt nye favorittsted?</p>
+    <a href="/reserve/" class="btn" style="font-size: 1.1rem; padding: 1rem 2rem;">Reserver et bord →</a>
 </div>
 
-<div class="card" style="margin-top:1.2rem;">
-    <h2>Åpningstider</h2>
-    <p>Mandag–Lørdag: 12:00–23:00<br>Søndag: 12:00–21:00</p>
+<div class="grid-2" style="margin-top: 1.5rem;">
+    <div class="section-container">
+        <div style="font-size: 2.5rem; margin-bottom: 1rem;">🕐</div>
+        <h2 style="margin-top: 0; font-size: 1.4rem; color: var(--accent-2);">Åpningstider</h2>
+        <div style="font-size: 1.05rem; line-height: 1.8;">
+            <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                <span style="font-weight: 600;">Mandag–Lørdag</span>
+                <span style="color: var(--accent-3); font-weight: 600;">12:00–23:00</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
+                <span style="font-weight: 600;">Søndag</span>
+                <span style="color: var(--accent-3); font-weight: 600;">12:00–21:00</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-container">
+        <div style="font-size: 2.5rem; margin-bottom: 1rem;">📍</div>
+        <h2 style="margin-top: 0; font-size: 1.4rem; color: var(--accent-2);">Adresse</h2>
+        <p style="font-size: 1.05rem; line-height: 1.8; margin: 0;">
+            Tangen brygge 1, 4516 Mandal<br>
+            Ring oss: <a href="tel:+4712345678" style="color: var(--accent-3); font-weight: 600;">12 34 56 78</a><br>
+            E-post: <a href="mailto:post@tangentorv.no" style="color: var(--accent-3); font-weight: 600;">post@tangentorv.no</a>
+        </p>
+    </div>
 </div>
 
-<div class="card" style="margin-top:1.2rem;">
-    <h2>Adresse</h2>
-    <p>Tangen brygge 1, 4516 Mandal<br>Ring oss: <a href="tel:+4712345678">12 34 56 78</a> • E-post: <a href="mailto:post@tangentorv.no">post@tangentorv.no</a></p>
-</div>
-
-<div class="card" style="margin-top:1.2rem;">
-    <h2>Om oss</h2>
-    <p>Vi er et lite team med lidenskap for gode råvarer og hyggelige opplevelser. Målet vårt er at du skal kjenne deg like velkommen med familien som med venner – enten du vil feire, slappe av, eller bare spise godt.</p>
+<div class="section-container" style="margin-top: 1.5rem;">
+    <div style="font-size: 2.5rem; margin-bottom: 1rem;">💎</div>
+    <h2 style="margin-top: 0; font-size: 1.4rem; color: var(--accent-2);">Om oss</h2>
+    <p style="font-size: 1.05rem; line-height: 1.8;">
+        Vi er et lite team med lidenskap for gode råvarer og hyggelige opplevelser. 
+        Målet vårt er at du skal kjenne deg like velkommen med familien som med venner – 
+        enten du vil feire, slappe av, eller bare spise godt.
+    </p>
 </div>
 {% endblock %}

@@ -1,50 +1,182 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="reserve">
-  <h1>Reserver ditt bord</h1>
-  <p>Velkommen til en kveld med god mat og stemning.<br>
-  Fyll ut skjemaet under, så holder vi av et bord for deg og dine.</p>
-  <a href="/menu/" class="btn" style="margin-bottom:1rem;">Se menyen</a>
-  <div class="card" style="margin-bottom:1rem;">
-    <h2>Praktisk informasjon</h2>
-    <ul>
-      <li>Bestillingstider: mellom <strong>12:00</strong> og <strong>23:00</strong>.</li>
-      <li>Søndag: begrenset kapasitet – maks <strong>5 reservasjoner</strong> per dag.</li>
-      <li>Har du allergier eller ønsker? Skriv det i kommentarfeltet eller gi beskjed ved ankomst.</li>
-    </ul>
+  
+  {% if success %}
+  <div class="section-container" style="background: linear-gradient(135deg, #ecfdf5, #d1fae5); border-color: var(--success);">
+    <h2 style="color: var(--success); margin-top: 0;">✓ Reservasjon bekreftet!</h2>
+    <p style="font-size: 1.1rem;">Takk <strong>{{ reservation.name }}</strong>! Din reservasjon er bekreftet.</p>
+    <div class="flex-row" style="margin-top: 1rem; gap: 2rem;">
+      <div>
+        <div style="color: var(--muted); font-size: 0.9rem;">Dato & Tid</div>
+        <div style="font-weight: 600; font-size: 1.1rem;">{{ reservation.date }} kl. {{ reservation.time }}</div>
+      </div>
+      <div>
+        <div style="color: var(--muted); font-size: 0.9rem;">Antall gjester</div>
+        <div style="font-weight: 600; font-size: 1.1rem;">{{ reservation.guests }} personer</div>
+      </div>
+      {% if reservation.table %}
+      <div>
+        <div style="color: var(--muted); font-size: 0.9rem;">Bord</div>
+        <div style="font-weight: 600; font-size: 1.1rem;">Nr. {{ reservation.table.number }}</div>
+      </div>
+      {% endif %}
+    </div>
+    <a href="/" class="btn" style="margin-top: 1.5rem;">Tilbake til forsiden</a>
   </div>
-  <form method="post" action="/reserve/">
-    {% csrf_token %}
-    <label>Navn
-      <input type="text" name="name" placeholder="Ditt fulle navn" required />
-    </label>
-    <label>E-post
-      <input type="email" name="email" placeholder="din@email.no" />
-    </label>
-    <label>Telefon
-      <input type="tel" name="phone" placeholder="Mobilnummer" required />
-    </label>
-    <label>Dato
-      <input type="date" name="date" required />
-    </label>
-    <label>Tid
-      <input type="time" name="time" required />
-    </label>
-    <label>Gjester
-      <input type="number" min="1" name="guests" placeholder="Antall personer" required />
-    </label>
-    <label>Kommentar (valgfritt)
-      <textarea name="note" rows="3" placeholder="Allergier, høytalere, barnevogn, osv."></textarea>
-    </label>
-    <button type="submit">Reserver bord nå</button>
-  </form>
-  <p style="margin-top:0.8rem;color:var(--muted)">Ved å sende inn godtar du våre vilkår for personvern. Vi lagrer kun nødvendig kontaktinfo for å bekrefte reservasjonen.</p>
-  {% if messages %}
-    <ul class="messages">
-      {% for message in messages %}
-        <li>{{ message }}</li>
+  {% else %}
+  
+  <div class="section-container">
+    <h1 style="margin-top: 0;">Reserver ditt bord</h1>
+    <p style="font-size: 1.1rem; color: var(--muted);">Velkommen til en kveld med god mat og stemning.<br>
+    Søk etter ledige bord og fyll ut skjemaet for å reservere.</p>
+    
+    <div class="flex-row" style="margin-top: 1.5rem;">
+      <a href="/menu/" class="btn-secondary btn">Se menyen</a>
+    </div>
+  </div>
+
+  <div class="section-container">
+    <h2 style="margin-top: 0;">Praktisk informasjon</h2>
+    <div class="grid-3">
+      <div style="padding: 1rem; background: var(--bg); border-radius: var(--radius-sm); border: 1px solid var(--border);">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🕐</div>
+        <div style="font-weight: 600; margin-bottom: 0.25rem;">Åpningstider</div>
+        <div style="color: var(--muted); font-size: 0.95rem;">12:00 - 23:00</div>
+      </div>
+      <div style="padding: 1rem; background: var(--bg); border-radius: var(--radius-sm); border: 1px solid var(--border);">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">📅</div>
+        <div style="font-weight: 600; margin-bottom: 0.25rem;">Søndag</div>
+        <div style="color: var(--muted); font-size: 0.95rem;">Maks 5 reservasjoner</div>
+      </div>
+      <div style="padding: 1rem; background: var(--bg); border-radius: var(--radius-sm); border: 1px solid var(--border);">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🍽️</div>
+        <div style="font-weight: 600; margin-bottom: 0.25rem;">Allergier</div>
+        <div style="color: var(--muted); font-size: 0.95rem;">Gi beskjed i kommentar</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search for available tables -->
+  <div class="section-container" style="background: linear-gradient(135deg, #eff6ff, #dbeafe);">
+    <h3 style="margin-top: 0; color: var(--accent-2);">Søk ledige bord</h3>
+    <form method="get" action="/reserve/">
+      <div class="grid-2">
+        <label style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <span style="font-weight: 600;">Dato</span>
+          <input type="date" name="date" value="{{ selected.date }}" required style="padding: 0.75rem; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 1rem;" />
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <span style="font-weight: 600;">Tid</span>
+          <input type="time" name="time" value="{{ selected.time }}" required style="padding: 0.75rem; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 1rem;" />
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <span style="font-weight: 600;">Antall gjester</span>
+          <input type="number" min="1" name="guests" value="{{ selected.guests }}" placeholder="Antall personer" required style="padding: 0.75rem; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 1rem;" />
+        </label>
+        <div style="display: flex; align-items: flex-end;">
+          <button type="submit" class="btn" style="width: 100%; padding: 0.75rem;">Søk ledige bord</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  {% if available_tables %}
+  <div class="section-container" style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-color: var(--success);">
+    <h3 style="margin-top: 0; color: var(--success);">✓ Ledige bord funnet</h3>
+    <p style="color: var(--muted); margin-bottom: 1.5rem;">Fant {{ available_tables|length }} ledig{{ available_tables|length|pluralize:"e" }} bord for {{ selected.date }} kl. {{ selected.time }}</p>
+    
+    <div class="grid-3">
+      {% for table in available_tables %}
+      <div style="padding: 1.5rem; background: white; border: 2px solid var(--border); border-radius: var(--radius); transition: all 0.2s ease; cursor: pointer;" 
+           onmouseover="this.style.borderColor='var(--accent-2)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-lg)'"
+           onmouseout="this.style.borderColor='var(--border)'; this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+          <div>
+            <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent);">Bord {{ table.number }}</div>
+            <div style="color: var(--muted); font-size: 0.9rem; margin-top: 0.25rem;">Kapasitet: {{ table.capacity }} personer</div>
+          </div>
+          <div style="background: var(--success); color: white; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600;">Ledig</div>
+        </div>
+        <button type="button" onclick="selectTable({{ table.id }}, {{ table.number }})" class="btn" style="width: 100%; margin-top: 0.5rem;">Velg dette bordet</button>
+      </div>
       {% endfor %}
-    </ul>
+    </div>
+  </div>
+  {% elif selected.date %}
+  <div class="section-container" style="background: linear-gradient(135deg, #fef3c7, #fde68a); border-color: var(--warning);">
+    <h3 style="margin-top: 0; color: var(--warning);">⚠ Ingen ledige bord</h3>
+    <p>Beklager, ingen ledige bord funnet for <strong>{{ selected.date }}</strong> kl. <strong>{{ selected.time }}</strong>. Vennligst prøv en annen tid eller dato.</p>
+  </div>
+  {% endif %}
+
+  <!-- Reservation form -->
+  <div class="section-container">
+    <h3 style="margin-top: 0;">Fullfør reservasjonen</h3>
+    
+    <form method="post" action="/reserve/" id="reservationForm">
+      {% csrf_token %}
+      <input type="hidden" name="table_id" id="table_id" />
+      <input type="hidden" name="date" id="hidden_date" value="{{ selected.date }}" />
+      <input type="hidden" name="time" id="hidden_time" value="{{ selected.time }}" />
+      <input type="hidden" name="guests" id="hidden_guests" value="{{ selected.guests }}" />
+      
+      <div id="selectedTableInfo" style="display: none; background: linear-gradient(135deg, #dbeafe, #bfdbfe); padding: 1.25rem; border-radius: var(--radius); margin-bottom: 1.5rem; border: 2px solid var(--accent-2);">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div style="background: var(--accent-2); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem;">✓</div>
+          <div>
+            <div style="font-weight: 600; font-size: 1.1rem;">Valgt bord: <span id="selectedTableNumber"></span></div>
+            <div style="color: var(--muted); font-size: 0.9rem;">Fyll ut informasjonen under for å bekrefte</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="grid-2" style="gap: 1.5rem;">
+        <label style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <span style="font-weight: 600;">Navn <span style="color: var(--danger);">*</span></span>
+          <input type="text" name="name" placeholder="Ditt fulle navn" required style="padding: 0.75rem; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 1rem;" />
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <span style="font-weight: 600;">E-post</span>
+          <input type="email" name="email" placeholder="din@email.no" style="padding: 0.75rem; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 1rem;" />
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <span style="font-weight: 600;">Telefon <span style="color: var(--danger);">*</span></span>
+          <input type="tel" name="phone" placeholder="Mobilnummer" required style="padding: 0.75rem; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 1rem;" />
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <span style="font-weight: 600;">Kommentar (valgfritt)</span>
+          <textarea name="note" rows="3" placeholder="Allergier, høytalere, barnevogn, osv." style="padding: 0.75rem; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 1rem; resize: vertical; grid-column: span 2;"></textarea>
+        </label>
+      </div>
+      
+      <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border);">
+        <button type="submit" id="submitBtn" disabled class="btn" style="font-size: 1.1rem; padding: 1rem 2rem;">Bekreft reservasjon →</button>
+        <p id="submitHelper" style="color: var(--muted); font-size: 0.9rem; margin-top: 0.75rem;">* Vennligst søk og velg et ledig bord først</p>
+      </div>
+    </form>
+  </div>
+  
+  <div style="padding: 1rem; background: var(--bg); border-radius: var(--radius-sm); color: var(--muted); font-size: 0.9rem; text-align: center;">
+    Ved å sende inn godtar du våre vilkår for personvern. Vi lagrer kun nødvendig kontaktinfo for å bekrefte reservasjonen.
+  </div>
+  
+  <script>
+    function selectTable(tableId, tableNumber) {
+      document.getElementById('table_id').value = tableId;
+      document.getElementById('selectedTableNumber').textContent = 'Bord ' + tableNumber;
+      document.getElementById('selectedTableInfo').style.display = 'block';
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = '1';
+      submitBtn.style.cursor = 'pointer';
+      document.getElementById('submitHelper').style.display = 'none';
+      
+      // Scroll to form
+      document.getElementById('reservationForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
+  
   {% endif %}
 </div>
 {% endblock %}

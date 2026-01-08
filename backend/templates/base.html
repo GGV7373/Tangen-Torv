@@ -20,21 +20,21 @@
           <a href="/">Hjem</a>
           <a href="/reserve/">Reservasjon</a>
           <a href="/menu/">Meny</a>
-          <button id="darkmode-toggle" class="btn-darkmode" type="button" title="Bytt mellom lyst og mørkt tema" aria-label="Bytt tema" style="margin-left:1.2rem;">
-            <span id="darkmode-icon" aria-hidden="true">🌙</span>
-            <span class="sr-only">Bytt tema</span>
-          </button>
-            {% if request.user.is_authenticated %}
+          {% if request.user.is_authenticated %}
             {% if request.user.is_staff %}
             <a href="/admin-reservations/">Admin Reservasjoner</a>
             {% endif %}
             <form method="post" action="{% url 'logout' %}" style="display:inline;">
               {% csrf_token %}
-              <button type="submit" class="link-button" style="background:none;border:none;color:inherit;padding:0;cursor:pointer;">Logg ut</button>
+              <button type="submit" class="link-button">Logg ut</button>
             </form>
-            {% else %}
+          {% else %}
             <a href="{% url 'login' %}">Logg inn</a>
-            {% endif %}
+          {% endif %}
+          <button id="darkmode-toggle" class="btn-darkmode" type="button" title="Bytt mellom lyst og mørkt tema" aria-label="Bytt tema">
+            <span id="darkmode-icon" aria-hidden="true">🌙</span>
+            <span class="sr-only">Bytt tema</span>
+          </button>
         </div>
       </nav>
     </header>

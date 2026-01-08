@@ -1,106 +1,203 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="admin-res">
-  <h1>Admin: Reservasjoner</h1>
-  <div class="stats">
-    <div class="stat"><span class="label">Total:</span> <strong>{{ total }}</strong></div>
-    <div class="stat"><span class="label">Siste 7 dager:</span> <strong>{{ total_last_7 }}</strong></div>
-    <div class="stat"><span class="label">Database:</span> <code>{{ db_path }}</code></div>
-  </div>
-  <form method="get" class="filter">
-    <label for="date">Dato</label>
-    <input type="date" id="date" name="date" value="{{ selected_date }}">
-    <button type="submit" class="btn">Filtrer</button>
-  </form>
-  <h2>Antall per dato</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Dato</th>
-        <th>Antall reservasjoner</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in counts_by_date %}
-      <tr>
-        <td>{{ item.dato }}</td>
-        <td>{{ item.count }}</td>
-      </tr>
-      {% empty %}
-      <tr><td colspan="3">Ingen data.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <h2>Rutegraf for {{ selected_date }}</h2>
-  <div class="grid-schedule">
-    {% for s in schedule_items %}
-      <div class="slot">
-        <div class="slot-head">{{ s.ts }}</div>
-        <div class="slot-body">
-          {% for r in s.items %}
-            <div class="pill">
-              <span class="pill-name">{{ r.navn }}</span>
-              <span class="pill-meta">bord {{ r.bord_id }} • {{ r.antall_personer }}</span>
-            </div>
-          {% empty %}
-            <div class="pill pill-empty">Ingen</div>
-          {% endfor %}
-        </div>
+  
+  <!-- Header Section -->
+  <div class="section-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h1 style="margin: 0; font-size: 2rem;">Admin: Reservasjoner</h1>
+        <p style="color: var(--muted); margin: 0.5rem 0 0 0;">Administrer og overvåk alle reservasjoner</p>
       </div>
-    {% endfor %}
+      <div style="background: var(--bg); padding: 0.75rem 1.25rem; border-radius: var(--radius); border: 1px solid var(--border);">
+        <div style="font-size: 0.85rem; color: var(--muted);">Database</div>
+        <code style="font-size: 0.9rem; color: var(--accent-2);">{{ db_path }}</code>
+      </div>
+    </div>
   </div>
-  <table>
-    <thead>
-      <tr>
-        <th>Navn</th>
-        <th>Telefon</th>
-        <th>E‑post</th>
-        <th>Dato</th>
-        <th>Tid</th>
-        <th>Gjester</th>
-        <th>Bord</th>
-        <th>Kommentar</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for r in reservations %}
-      <tr>
-        <td>{{ r.navn }}</td>
-        <td>{{ r.telefon }}</td>
-        <td>
-          {% if r.epost %}
-            <a href="mailto:{{ r.epost }}">{{ r.epost }}</a>
-          {% else %}
-            <span style="color:var(--muted)">–</span>
-          {% endif %}
-        </td>
-        <td>{{ r.dato }}</td>
-        <td>{{ r.tidspunkt }}</td>
-        <td>{{ r.antall_personer }}</td>
-        <td>{{ r.bord_id }}</td>
-        <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ r.kommentar|default:'' }}">{{ r.kommentar|default:'–' }}</td>
-        <td>
-          <form method="post" action="{% url 'delete_reservation' r.id %}" onsubmit="return confirm('Slette denne reservasjonen?');">
-            {% csrf_token %}
-            <button type="submit">Slett</button>
-          </form>
-          <form method="post" action="{% url 'send_reservation_email' r.id %}" style="margin-top:0.4rem;">
-            {% csrf_token %}
-            {% if r.epost %}
-              <input type="hidden" name="to_email" value="{{ r.epost }}">
-              <button type="submit">Send e‑post</button>
-              <div style="font-size:0.85rem;color:var(--muted);margin-top:0.2rem;">{{ r.epost }}</div>
-            {% else %}
-              <input type="email" name="to_email" placeholder="kundens e‑post" required style="padding:0.3rem 0.5rem; border:1px solid var(--border); border-radius:8px; margin-bottom:0.3rem;">
-              <button type="submit">Send e‑post</button>
-            {% endif %}
-          </form>
-        </td>
-      </tr>
-      {% empty %}
-      <tr><td colspan="8">Ingen reservasjoner funnet.</td></tr>
+
+  <!-- Stats Cards -->
+  <div class="grid-3" style="margin-bottom: 1.5rem;">
+    <div class="section-container" style="text-align: center;">
+      <div style="font-size: 3rem; font-weight: 700; color: var(--accent-2); margin-bottom: 0.5rem;">{{ total }}</div>
+      <div style="color: var(--muted); font-weight: 600;">Totale reservasjoner</div>
+    </div>
+    <div class="section-container" style="text-align: center;">
+      <div style="font-size: 3rem; font-weight: 700; color: var(--accent-3); margin-bottom: 0.5rem;">{{ total_last_7 }}</div>
+      <div style="color: var(--muted); font-weight: 600;">Siste 7 dager</div>
+    </div>
+    <div class="section-container" style="text-align: center;">
+      <div style="font-size: 3rem; font-weight: 700; color: var(--success); margin-bottom: 0.5rem;">{{ reservations|length }}</div>
+      <div style="color: var(--muted); font-weight: 600;">Viser nå</div>
+    </div>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="section-container">
+    <h2 style="margin-top: 0; font-size: 1.3rem;">Filtrer reservasjoner</h2>
+    <form method="get" style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
+      <label style="flex: 1; min-width: 200px;">
+        <div style="font-weight: 600; margin-bottom: 0.5rem; color: var(--text);">Velg dato</div>
+        <input type="date" id="date" name="date" value="{{ selected_date }}" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 1rem;">
+      </label>
+      <button type="submit" class="btn" style="padding: 0.75rem 2rem;">Filtrer</button>
+      {% if selected_date %}
+      <a href="{% url 'admin_reservations' %}" class="btn-secondary btn" style="padding: 0.75rem 1.5rem;">Nullstill filter</a>
+      {% endif %}
+    </form>
+  </div>
+
+  <!-- Counts by Date -->
+  <div class="section-container">
+    <h2 style="margin-top: 0; font-size: 1.3rem;">Antall per dato</h2>
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="background: var(--bg); border-bottom: 2px solid var(--border);">
+            <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--accent);">Dato</th>
+            <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--accent);">Antall reservasjoner</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in counts_by_date %}
+          <tr style="border-bottom: 1px solid var(--border); transition: background 0.2s ease;" 
+              onmouseover="this.style.background='var(--bg)'" 
+              onmouseout="this.style.background='transparent'">
+            <td style="padding: 0.875rem 1rem; font-weight: 500;">{{ item.dato }}</td>
+            <td style="padding: 0.875rem 1rem;">
+              <span style="background: var(--accent-2); color: white; padding: 0.25rem 0.75rem; border-radius: 999px; font-weight: 600; font-size: 0.9rem;">
+                {{ item.count }}
+              </span>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="2" style="padding: 2rem; text-align: center; color: var(--muted);">
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">📅</div>
+              Ingen data tilgjengelig.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Schedule Grid -->
+  {% if schedule_items %}
+  <div class="section-container">
+    <h2 style="margin-top: 0; font-size: 1.3rem;">Rutegraf for {{ selected_date }}</h2>
+    <div class="grid-schedule">
+      {% for s in schedule_items %}
+        <div class="slot" style="border: 2px solid var(--border); border-radius: var(--radius); overflow: hidden;">
+          <div class="slot-head" style="padding: 0.75rem; background: linear-gradient(135deg, var(--accent-2), var(--accent-3)); color: white; font-weight: 700; text-align: center;">{{ s.ts }}</div>
+          <div class="slot-body" style="padding: 0.75rem; background: var(--surface); display: flex; flex-direction: column; gap: 0.5rem; min-height: 60px;">
+            {% for r in s.items %}
+              <div class="pill" style="display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem;">
+                <span class="pill-name" style="font-weight: 600; color: var(--accent);">{{ r.navn }}</span>
+                <span class="pill-meta" style="color: var(--muted); font-size: 0.85rem;">bord {{ r.bord_id }} • {{ r.antall_personer }}p</span>
+              </div>
+            {% empty %}
+              <div class="pill pill-empty" style="text-align: center; color: var(--muted); font-style: italic; padding: 1rem;">Ingen reservasjoner</div>
+            {% endfor %}
+          </div>
+        </div>
       {% endfor %}
-    </tbody>
-  </table>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Main Reservations Table -->
+  <div class="section-container">
+    <h2 style="margin-top: 0; font-size: 1.3rem;">Alle reservasjoner {% if selected_date %}for {{ selected_date }}{% endif %}</h2>
+    <div style="overflow-x: auto; margin-top: 1rem;">
+      <table style="width: 100%; border-collapse: collapse; background: var(--surface);">
+        <thead>
+          <tr style="background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: white;">
+            <th style="padding: 1rem; text-align: left; font-weight: 600; white-space: nowrap;">Navn</th>
+            <th style="padding: 1rem; text-align: left; font-weight: 600; white-space: nowrap;">Telefon</th>
+            <th style="padding: 1rem; text-align: left; font-weight: 600; white-space: nowrap;">E‑post</th>
+            <th style="padding: 1rem; text-align: left; font-weight: 600; white-space: nowrap;">Dato</th>
+            <th style="padding: 1rem; text-align: left; font-weight: 600; white-space: nowrap;">Tid</th>
+            <th style="padding: 1rem; text-align: center; font-weight: 600; white-space: nowrap;">Gjester</th>
+            <th style="padding: 1rem; text-align: center; font-weight: 600; white-space: nowrap;">Bord</th>
+            <th style="padding: 1rem; text-align: left; font-weight: 600; white-space: nowrap;">Kommentar</th>
+            <th style="padding: 1rem; text-align: center; font-weight: 600; white-space: nowrap;">Handlinger</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in reservations %}
+          <tr style="border-bottom: 1px solid var(--border); transition: all 0.2s ease;" 
+              onmouseover="this.style.background='var(--bg)'; this.style.transform='scale(1.01)'" 
+              onmouseout="this.style.background='transparent'; this.style.transform='scale(1)'">
+            <td style="padding: 1rem; font-weight: 600; color: var(--accent);">{{ r.navn }}</td>
+            <td style="padding: 1rem;">
+              <a href="tel:{{ r.telefon }}" style="color: var(--accent-2); text-decoration: none; font-weight: 500;">{{ r.telefon }}</a>
+            </td>
+            <td style="padding: 1rem;">
+              {% if r.epost %}
+                <a href="mailto:{{ r.epost }}" style="color: var(--accent-2); text-decoration: none;">{{ r.epost }}</a>
+              {% else %}
+                <span style="color: var(--muted);">–</span>
+              {% endif %}
+            </td>
+            <td style="padding: 1rem; white-space: nowrap;">{{ r.dato }}</td>
+            <td style="padding: 1rem; font-weight: 600;">{{ r.tidspunkt }}</td>
+            <td style="padding: 1rem; text-align: center;">
+              <span style="background: var(--accent-3); color: white; padding: 0.25rem 0.75rem; border-radius: 999px; font-weight: 600; font-size: 0.85rem;">
+                {{ r.antall_personer }}
+              </span>
+            </td>
+            <td style="padding: 1rem; text-align: center;">
+              <span style="background: var(--accent); color: white; padding: 0.25rem 0.75rem; border-radius: var(--radius-sm); font-weight: 600;">
+                {{ r.bord_id }}
+              </span>
+            </td>
+            <td style="padding: 1rem; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ r.kommentar|default:'' }}">
+              <span style="color: var(--muted);">{{ r.kommentar|default:'–' }}</span>
+            </td>
+            <td style="padding: 1rem;">
+              <div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: stretch;">
+                <form method="post" action="{% url 'delete_reservation' r.id %}" onsubmit="return confirm('Er du sikker på at du vil slette denne reservasjonen?');">
+                  {% csrf_token %}
+                  <button type="submit" class="btn-danger btn" style="width: 100%; padding: 0.5rem; font-size: 0.9rem;">Slett</button>
+                </form>
+                <form method="post" action="{% url 'send_reservation_email' r.id %}">
+                  {% csrf_token %}
+                  {% if r.epost %}
+                    <input type="hidden" name="to_email" value="{{ r.epost }}">
+                    <button type="submit" class="btn-secondary btn" style="width: 100%; padding: 0.5rem; font-size: 0.9rem;">Send e‑post</button>
+                  {% else %}
+                    <input type="email" name="to_email" placeholder="Kundens e‑post" required style="width: 100%; padding: 0.5rem; border: 2px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 0.25rem; font-size: 0.9rem;">
+                    <button type="submit" class="btn-secondary btn" style="width: 100%; padding: 0.5rem; font-size: 0.9rem;">Send e‑post</button>
+                  {% endif %}
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="9" style="padding: 3rem; text-align: center;">
+              <div style="font-size: 3rem; margin-bottom: 1rem;">📋</div>
+              <div style="font-size: 1.2rem; font-weight: 600; color: var(--muted); margin-bottom: 0.5rem;">Ingen reservasjoner funnet</div>
+              <div style="color: var(--muted);">Prøv å justere filteret eller vent på nye bestillinger.</div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 </div>
+
+<style>
+.admin-res { max-width: 1400px; margin: 0 auto; }
+.grid-schedule { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+  gap: 1rem; 
+  margin-top: 1rem; 
+}
+</style>
 {% endblock %}
